@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Webcam Live Parma</title>
+  <style>
+    :root {
+      --bg: #0f0f13;
+      --surface: #1a1a22;
+      --surface2: #22222e;
+      --border: #2e2e3e;
+      --accent: #e8c547;
+      --live-red: #e84747;
+      --text: #e8e8f0;
+      --text-muted: #8888a8;
+      --green: #00c97a;
+      --radius: 14px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+    }
+
+    /* ── Header ─────────────────────────────────────── */
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #009246 0%, #009246 33%, #fff 33%, #fff 66%, #ce2b37 66%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .logo-text h1 {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+
+    .logo-text span {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .header-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .dot-live {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--live-red);
+      animation: pulse 1.5s ease-in-out infinite;
+      flex-shrink: 0;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.5; transform: scale(0.8); }
+    }
+
+    #refresh-timer {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 12px;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: border-color .2s;
+    }
+
+    #refresh-timer:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* ── Hero ─────────────────────────────────────── */
+    .hero {
+      background: linear-gradient(180deg, rgba(232,197,71,.07) 0%, transparent 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 28px 24px 20px;
+    }
+
+    .hero h2 {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .hero h2 span { color: var(--accent); }
+
+    .hero p {
+      margin-top: 6px;
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    .badges {
+      display: flex;
+      gap: 8px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+    }
+
+    .badge-live { background: rgba(232,71,71,.15); color: var(--live-red); border: 1px solid rgba(232,71,71,.3); }
+    .badge-cams { background: rgba(232,197,71,.12); color: var(--accent); border: 1px solid rgba(232,197,71,.25); }
+    .badge-auto { background: rgba(0,201,122,.12); color: var(--green); border: 1px solid rgba(0,201,122,.25); }
+
+    /* ── Grid ─────────────────────────────────────── */
+    .grid-section {
+      padding: 24px;
+    }
+
+    .section-title {
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .cams-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(520px, 1fr));
+      gap: 20px;
+    }
+
+    .cam-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: border-color .2s, transform .2s, box-shadow .2s;
+      position: relative;
+    }
+
+    .cam-card:hover {
+      border-color: rgba(232,197,71,.4);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(0,0,0,.4);
+    }
+
+    .cam-card.featured {
+      grid-column: 1 / -1;
+    }
+
+    /* ── Card header bar ───────────────────────────── */
+    .cam-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .cam-live-badge {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(232,71,71,.15);
+      border: 1px solid rgba(232,71,71,.35);
+      border-radius: 6px;
+      padding: 3px 8px;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--live-red);
+      letter-spacing: .8px;
+      text-transform: uppercase;
+      flex-shrink: 0;
+    }
+
+    .cam-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--live-red);
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    .cam-info { flex: 1; min-width: 0; }
+
+    .cam-name {
+      font-size: 14px;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .cam-meta {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .cam-link {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 8px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      transition: color .15s, border-color .15s;
+      flex-shrink: 0;
+    }
+
+    .cam-link:hover { color: var(--accent); border-color: var(--accent); }
+
+    /* ── Embed frame ─────────────────────────────── */
+    .cam-frame-wrapper {
+      position: relative;
+      background: #000;
+    }
+
+    .cam-frame-wrapper iframe {
+      display: block;
+      width: 100%;
+      height: 380px;
+      border: none;
+    }
+
+    .cam-card.featured .cam-frame-wrapper iframe {
+      height: 480px;
+    }
+
+    /* ── Image refresh cam ─────────────────────────── */
+    .cam-img-wrapper {
+      position: relative;
+      background: #000;
+      overflow: hidden;
+    }
+
+    .cam-img-wrapper img {
+      display: block;
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+      transition: opacity .3s;
+    }
+
+    .cam-card.featured .cam-img-wrapper img {
+      height: 420px;
+    }
+
+    .cam-img-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,.65);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      opacity: 0;
+      transition: opacity .2s;
+    }
+
+    .cam-img-wrapper:hover .cam-img-overlay {
+      opacity: 1;
+    }
+
+    .btn-open {
+      background: var(--accent);
+      color: #111;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 22px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background .15s;
+    }
+
+    .btn-open:hover { background: #f0d060; }
+
+    /* ── Timestamp bar ─────────────────────────────── */
+    .cam-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 16px;
+      font-size: 11px;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border);
+    }
+
+    .cam-source { display: flex; align-items: center; gap: 5px; }
+    .cam-source-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
+
+    /* ── Error / offline state ─────────────────────── */
+    .cam-error {
+      height: 300px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+
+    .cam-error .icon { font-size: 32px; }
+
+    /* ── Info grid ─────────────────────────────────── */
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+      padding: 0 24px 24px;
+    }
+
+    .info-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+    }
+
+    .info-card .label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: .8px; }
+    .info-card .value { font-size: 22px; font-weight: 700; margin-top: 4px; }
+    .info-card .sub   { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+    /* ── Footer ─────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 20px 24px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.8;
+    }
+
+    footer a { color: var(--accent); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    /* ── Responsive ────────────────────────────────── */
+    @media (max-width: 600px) {
+      .cams-grid { grid-template-columns: 1fr; }
+      .cam-frame-wrapper iframe { height: 260px; }
+      .cam-img-wrapper img { height: 220px; }
+      .cam-card.featured .cam-frame-wrapper iframe { height: 300px; }
+      .hero h2 { font-size: 22px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Header ──────────────────────────────────────── -->
+<header>
+  <div class="logo">
+    <div class="logo-icon">🎥</div>
+    <div class="logo-text">
+      <h1>Webcam Parma</h1>
+      <span>Live streaming in tempo reale</span>
+    </div>
+  </div>
+  <div class="header-status">
+    <div class="dot-live"></div>
+    <span id="cam-count">8 camere attive</span>
+    &nbsp;·&nbsp;
+    <span id="refresh-timer" title="Clicca per aggiornare">⟳ <span id="countdown">30</span>s</span>
+  </div>
+</header>
+
+<!-- ── Hero ─────────────────────────────────────────── -->
+<div class="hero">
+  <h2>📡 Parma <span>in diretta</span></h2>
+  <p>Visualizza tutte le webcam attive della città di Parma e provincia — aggiornate in tempo reale.</p>
+  <div class="badges">
+    <span class="badge badge-live">● Live</span>
+    <span class="badge badge-cams">8 webcam</span>
+    <span class="badge badge-auto">Auto-aggiornamento</span>
+  </div>
+</div>
+
+<!-- ── Stats row ─────────────────────────────────────── -->
+<div class="info-grid" style="padding-top:24px">
+  <div class="info-card">
+    <div class="label">Telecamere attive</div>
+    <div class="value" style="color:var(--green)">8</div>
+    <div class="sub">Centro + provincia</div>
+  </div>
+  <div class="info-card">
+    <div class="label">Aggiornamento</div>
+    <div class="value" style="color:var(--accent)">30s</div>
+    <div class="sub">Snapshot automatici</div>
+  </div>
+  <div class="info-card">
+    <div class="label">Ultimo refresh</div>
+    <div class="value" style="font-size:14px;padding-top:6px" id="last-update">—</div>
+    <div class="sub">Ora locale</div>
+  </div>
+  <div class="info-card">
+    <div class="label">Copertura</div>
+    <div class="value" style="color:#a78bfa">Parma</div>
+    <div class="sub">Centro storico + A1</div>
+  </div>
+</div>
+
+<!-- ── Featured cam ─────────────────────────────────── -->
+<div class="grid-section" style="padding-bottom:4px">
+  <div class="section-title">⭐ Webcam in primo piano</div>
+  <div class="cams-grid">
+
+    <!-- Piazza Garibaldi — SkylineWebcams embed -->
+    <div class="cam-card featured">
+      <div class="cam-header">
+        <div class="cam-live-badge"><div class="cam-dot"></div>LIVE</div>
+        <div class="cam-info">
+          <div class="cam-name">Piazza Garibaldi</div>
+          <div class="cam-meta">📍 Centro storico · Palazzo del Governatore</div>
+        </div>
+        <a class="cam-link" href="https://www.skylinewebcams.com/en/webcam/italia/emilia-romagna/parma/piazza-garibaldi.html" target="_blank" rel="noopener">
+          ↗ Apri
+        </a>
+      </div>
+      <div class="cam-frame-wrapper">
+        <iframe
+          src="https://embed.skylinewebcams.com/cam/1106.html"
+          allowfullscreen
+          scrolling="no"
+          allow="autoplay; fullscreen"
+          title="Webcam live Piazza Garibaldi, Parma"
+        ></iframe>
+      </div>
+      <div class="cam-footer">
+        <div class="cam-source"><div class="cam-source-dot"></div> SkylineWebcams</div>
+        <span>44°48'04"N 10°19'41"E</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── Other cams grid ─────────────────────────────── -->
+<div class="grid-section">
+  <div class="section-title">📷 Altre webcam di Parma</div>
+  <div class="cams-grid">
+
+    <!-- Windy — Parma A1 (thumbnail + link) -->
+    <div class="cam-card" id="card-a1">
+      <div class="cam-header">
+        <div class="cam-live-badge"><div class="cam-dot"></div>LIVE</div>
+        <div class="cam-info">
+          <div class="cam-name">Autostrada A1 — Parma</div>
+          <div class="cam-meta">📍 Autostrada del Sole · Traffico</div>
+        </div>
+        <a class="cam-link" href="https://www.windy.com/webcams/1465390477" target="_blank" rel="noopener">↗ Apri</a>
+      </div>
+      <div class="cam-img-wrapper">
+        <img
+          id="img-a1"
+          src="https://images-webcams.windy.com/77/1465390477/current/thumbnail/1465390477.jpg"
+          alt="Webcam A1 Parma"
+          onerror="handleImgError('img-a1','https://www.windy.com/webcams/1465390477')"
+        />
+        <div class="cam-img-overlay">
+          <a class="btn-open" href="https://www.windy.com/webcams/1465390477" target="_blank" rel="noopener">▶ Guarda Live</a>
+        </div>
+      </div>
+      <div class="cam-footer">
+        <div class="cam-source"><div class="cam-source-dot"></div> Windy Webcams</div>
+        <span id="ts-a1">—</span>
+      </div>
+    </div>
+
+    <!-- Windy — Piazza Garibaldi (thumbnail + link) -->
+    <div class="cam-card" id="card-wg">
+      <div class="cam-header">
+        <div class="cam-live-badge"><div class="cam-dot"></div>LIVE</div>
+        <div class="cam-info">
+          <div class="cam-name">Piazza Garibaldi — Windy</div>
+          <div class="cam-meta">📍 Centro storico · Vista piazza</div>
+        </div>
+        <a class="cam-link" href="https://www.windy.com/webcams/1386705404" target="_blank" rel="noopener">↗ Apri</a>
+      </div>
+      <div class="cam-img-wrapper">
+        <img
+          id="img-wg"
+          src="https://images-webcams.windy.com/04/1386705404/current/thumbnail/1386705404.jpg"
+          alt="Piazza Garibaldi Parma Windy"
+          onerror="handleImgError('img-wg','https://www.windy.com/webcams/1386705404')"
+        />
+        <div class="cam-img-overlay">
+          <a class="btn-open" href="https://www.windy.com/webcams/1386705404" target="_blank" rel="noopener">▶ Guarda Live</a>
+        </div>
+      </div>
+      <div class="cam-footer">
+        <div class="cam-source"><div class="cam-source-dot"></div> Windy Webcams</div>
+        <span id="ts-wg">—</span>
+      </div>
+    </div>
+
+    <!-- MeteoDocato — Parma San Lazzaro (iframe) -->
+    <div class="cam-card">
+      <div class="cam-header">
+        <div class="cam-live-badge"><div class="cam-dot"></div>LIVE</div>
+        <div class="cam-info">
+          <div class="cam-name">Parma Est — Arco di San Lazzaro</div>
+          <div class="cam-meta">📍 Osservatorio Meteorologico · Alta risoluzione</div>
+        </div>
+        <a class="cam-link" href="https://www.meteoducato.it/webcam-parma-centro.php" target="_blank" rel="noopener">↗ Apri</a>
+      </div>
+      <div class="cam-img-wrapper">
+        <div class="cam-error">
+          <div class="icon">🌤️</div>
+          <div>Webcam Meteo · Parma Est</div>
+          <a class="btn-open" href="https://www.meteoducato.it/webcam-parma-centro.php" target="_blank" rel="noopener">▶ Guarda Live</a>
+        </div>
+      </div>
+      <div class="cam-footer">
+        <div class="cam-source"><div class="cam-source-dot"></div> MeteoDocato</div>
+        <span>H24 streaming</span>
+      </div>
+    </div>
+
+    <!-- ilMeteo — Parma -->
+    <div class="cam-card">
+      <div class="cam-header">
+        <div class="cam-live-badge"><div class="cam-dot"></div>LIVE</div>
+        <div class="cam-info">
+          <div class="cam-name">Parma — iLMeteo</div>
+          <div class="cam-meta">📍 Meteo · Condizioni atmosferiche</div>
+        </div>
+        <a class="cam-link" href="https://www.ilmeteo.it/webcam/Parma" target="_blank" rel="noopener">↗ Apri</a>
+      </div>
+      <div class="cam-img-wrapper">
+        <div class="cam-error">
+          <div class="icon">🌡️</div>
+          <div>Webcam Meteo · iLMeteo Parma</div>
+          <a class="btn-open" href="https://www.ilmeteo.it/webcam/Parma" target="_blank" rel="noopener">▶ Guarda Live</a>
+        </div>
+      </div>
+      <div class="cam-footer">
+        <div class="cam-source"><div class="cam-source-dot"></div> iLMeteo.it</div>
+        <span>Meteo Parma</span>
+      </div>
+    </div>
+
+    <!-- 3B Meteo — Parma -->
+    <div class="cam-card">
+      <div class="cam-header">
+        <div class="cam-live-badge"><div class="cam-dot"></div>LIVE</div>
+        <div class="cam-info">
+          <div class="cam-name">Parma — 3B Meteo</div>
+          <div class="cam-meta">📍 Meteo Parma · Osservazione</div>
+        </div>
+        <a class="cam-link" href="https://www.3bmeteo.com/le_webcam/4988" target="_blank" rel="noopener">↗ Apri</a>
+      </div>
+      <div class="cam-img-wrapper">
+        <div class="cam-error">
+          <div class="icon">🌦️</div>
+          <div>Webcam Parma · 3B Meteo</div>
+          <a class="btn-open" href="https://www.3bmeteo.com/le_webcam/4988" target="_blank" rel="noopener">▶ Guarda Live</a>
+        </div>
+      </div>
+      <div class="cam-footer">
+        <div class="cam-source"><div class="cam-source-dot"></div> 3B Meteo</div>
+        <span>Webcam Parma</span>
+      </div>
+    </div>
+
+    <!-- Via Emilia Est -->
+    <div class="cam-card">
+      <div class="cam-header">
+        <div class="cam-live-badge"><div class="cam-dot"></div>LIVE</div>
+        <div class="cam-info">
+          <div class="cam-name">Via Emilia Est — Strada</div>
+          <div class="cam-meta">📍 Via Emilia Est · Traffico urbano</div>
+        </div>
+        <a class="cam-link" href="https://www.webcamtaxi.com/en/italy/emilia-romagna/parma-viaemiliaest-streetcam.html" target="_blank" rel="noopener">↗ Apri</a>
+      </div>
+      <div class="cam-img-wrapper">
+        <img
+          id="img-via"
+          src="https://images.webcamtaxi.com/cam-parma-viaemiliaest-streetcam-1.jpg"
+          alt="Via Emilia Est Parma"
+          onerror="handleImgError('img-via','https://www.webcamtaxi.com/en/italy/emilia-romagna/parma-viaemiliaest-streetcam.html')"
+        />
+        <div class="cam-img-overlay">
+          <a class="btn-open" href="https://www.webcamtaxi.com/en/italy/emilia-romagna/parma-viaemiliaest-streetcam.html" target="_blank" rel="noopener">▶ Guarda Live</a>
+        </div>
+      </div>
+      <div class="cam-footer">
+        <div class="cam-source"><div class="cam-source-dot"></div> WebcamTaxi</div>
+        <span>Traffico urbano</span>
+      </div>
+    </div>
+
+    <!-- Comune di Parma — Piazza Garibaldi ufficiale -->
+    <div class="cam-card">
+      <div class="cam-header">
+        <div class="cam-live-badge"><div class="cam-dot"></div>LIVE</div>
+        <div class="cam-info">
+          <div class="cam-name">Piazza Garibaldi — Comune Ufficiale</div>
+          <div class="cam-meta">📍 Comune di Parma · Webcam istituzionale</div>
+        </div>
+        <a class="cam-link" href="https://www.comune.parma.it/it/webcam-su-piazza-garibaldi" target="_blank" rel="noopener">↗ Apri</a>
+      </div>
+      <div class="cam-frame-wrapper">
+        <iframe
+          src="https://www.comune.parma.it/it/webcam-su-piazza-garibaldi"
+          allowfullscreen
+          scrolling="no"
+          title="Webcam ufficiale Comune di Parma - Piazza Garibaldi"
+          sandbox="allow-scripts allow-same-origin allow-forms"
+        ></iframe>
+      </div>
+      <div class="cam-footer">
+        <div class="cam-source"><div class="cam-source-dot"></div> Comune di Parma</div>
+        <span>Webcam istituzionale</span>
+      </div>
+    </div>
+
+    <!-- Ventusky — Parma meteo -->
+    <div class="cam-card">
+      <div class="cam-header">
+        <div class="cam-live-badge"><div class="cam-dot"></div>LIVE</div>
+        <div class="cam-info">
+          <div class="cam-name">Parma — Ventusky</div>
+          <div class="cam-meta">📍 44°48'N 10°19'E · 64 m s.l.m.</div>
+        </div>
+        <a class="cam-link" href="https://www.ventusky.com/webcam-411860051" target="_blank" rel="noopener">↗ Apri</a>
+      </div>
+      <div class="cam-img-wrapper">
+        <div class="cam-error">
+          <div class="icon">🌀</div>
+          <div>Webcam Meteo · Ventusky Parma</div>
+          <a class="btn-open" href="https://www.ventusky.com/webcam-411860051" target="_blank" rel="noopener">▶ Guarda Live</a>
+        </div>
+      </div>
+      <div class="cam-footer">
+        <div class="cam-source"><div class="cam-source-dot"></div> Ventusky</div>
+        <span>Meteo + webcam</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── Footer ─────────────────────────────────────── -->
+<footer>
+  <p>
+    Dati live forniti da
+    <a href="https://www.skylinewebcams.com/en/webcam/italia/emilia-romagna/parma.html" target="_blank" rel="noopener">SkylineWebcams</a> ·
+    <a href="https://www.windy.com/webcams" target="_blank" rel="noopener">Windy Webcams</a> ·
+    <a href="https://www.comune.parma.it/it/webcam-su-piazza-garibaldi" target="_blank" rel="noopener">Comune di Parma</a> ·
+    <a href="https://www.meteoducato.it/webcam-parma-centro.php" target="_blank" rel="noopener">MeteoDocato</a>
+  </p>
+  <p style="margin-top:6px">Le immagini sono di proprietà dei rispettivi fornitori · Le riprese sono a scopo informativo</p>
+</footer>
+
+<!-- ── JS ─────────────────────────────────────────── -->
+<script>
+  // ── Timestamp helpers ───────────────────────────
+  function now() {
+    return new Date().toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  }
+
+  function updateTimestamps() {
+    const t = now();
+    ['ts-a1','ts-wg'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = t;
+    });
+    const lu = document.getElementById('last-update');
+    if (lu) lu.textContent = t;
+  }
+
+  // ── Image refresh ────────────────────────────────
+  const refreshImgs = [
+    { id: 'img-a1',  base: 'https://images-webcams.windy.com/77/1465390477/current/thumbnail/1465390477.jpg' },
+    { id: 'img-wg',  base: 'https://images-webcams.windy.com/04/1386705404/current/thumbnail/1386705404.jpg' },
+    { id: 'img-via', base: 'https://images.webcamtaxi.com/cam-parma-viaemiliaest-streetcam-1.jpg' },
+  ];
+
+  function refreshImages() {
+    const ts = Date.now();
+    refreshImgs.forEach(({ id, base }) => {
+      const el = document.getElementById(id);
+      if (el && !el.dataset.error) {
+        el.style.opacity = '0.6';
+        const img = new Image();
+        img.onload = () => {
+          el.src = base + '?t=' + ts;
+          el.style.opacity = '1';
+        };
+        img.onerror = () => { el.style.opacity = '1'; };
+        img.src = base + '?t=' + ts;
+      }
+    });
+    updateTimestamps();
+  }
+
+  // ── Error handler ────────────────────────────────
+  function handleImgError(imgId, fallbackUrl) {
+    const el = document.getElementById(imgId);
+    if (!el) return;
+    el.dataset.error = '1';
+    const wrapper = el.parentElement;
+    wrapper.innerHTML = `
+      <div class="cam-error">
+        <div class="icon">📷</div>
+        <div>Stream temporaneamente non disponibile</div>
+        <a class="btn-open" href="${fallbackUrl}" target="_blank" rel="noopener">▶ Guarda sul sito</a>
+      </div>`;
+  }
+
+  // ── Countdown timer ──────────────────────────────
+  let countdown = 30;
+  const timerEl = document.getElementById('countdown');
+  const btnEl   = document.getElementById('refresh-timer');
+
+  function resetCountdown() {
+    countdown = 30;
+    if (timerEl) timerEl.textContent = countdown;
+  }
+
+  setInterval(() => {
+    countdown--;
+    if (timerEl) timerEl.textContent = countdown;
+    if (countdown <= 0) {
+      refreshImages();
+      resetCountdown();
+    }
+  }, 1000);
+
+  btnEl && btnEl.addEventListener('click', () => {
+    refreshImages();
+    resetCountdown();
+  });
+
+  // ── Init ─────────────────────────────────────────
+  updateTimestamps();
+  refreshImages();
+</script>
+
+</body>
+</html>
