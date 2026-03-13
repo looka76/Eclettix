@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eclettix — Voice Rooms</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ENTRY SCREEN -->
+<div id="entry-screen" class="screen active">
+  <div class="entry-card">
+    <div class="logo">
+      <span class="logo-icon">🎙</span>
+      <h1>Eclettix</h1>
+      <p>Entra in una stanza, chatta con la voce e ascolta musica non stop</p>
+    </div>
+    <input id="username-input" type="text" placeholder="Il tuo nome..." maxlength="20" autocomplete="off">
+    <button id="enter-btn" class="btn-primary">Entra</button>
+  </div>
+</div>
+
+<!-- LOBBY SCREEN -->
+<div id="lobby-screen" class="screen">
+  <header class="lobby-header">
+    <div class="header-left">
+      <span class="logo-icon-sm">🎙</span>
+      <span class="brand">Eclettix</span>
+    </div>
+    <div class="header-right">
+      <span id="lobby-username" class="user-badge"></span>
+    </div>
+  </header>
+  <main class="lobby-main">
+    <h2>Scegli una stanza</h2>
+    <div id="rooms-grid" class="rooms-grid"></div>
+  </main>
+</div>
+
+<!-- ROOM SCREEN -->
+<div id="room-screen" class="screen">
+  <div id="room-bg" class="room-bg"></div>
+
+  <header class="room-header">
+    <button id="back-btn" class="icon-btn" title="Torna alla lobby">←</button>
+    <div class="room-title-wrap">
+      <span id="room-emoji" class="room-emoji-hdr"></span>
+      <div>
+        <div id="room-name-hdr" class="room-name-hdr"></div>
+        <div id="room-genre-hdr" class="room-genre-hdr"></div>
+      </div>
+    </div>
+    <div class="header-right">
+      <span id="room-username" class="user-badge"></span>
+    </div>
+  </header>
+
+  <div class="room-body">
+
+    <!-- LEFT: users + voice controls -->
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <h3>🎙 Partecipanti</h3>
+        <div id="users-list" class="users-list"></div>
+      </div>
+
+      <div class="voice-controls">
+        <button id="mic-btn" class="mic-btn muted" title="Microfono">
+          <span class="mic-icon">🎤</span>
+          <span class="mic-label">Microfono spento</span>
+        </button>
+        <div id="mic-status" class="mic-status"></div>
+      </div>
+    </aside>
+
+    <!-- CENTER: music player + chat -->
+    <main class="room-main">
+      <!-- Music Player -->
+      <div class="music-player" id="music-player">
+        <div class="player-info">
+          <div class="now-playing-label">▶ IN RIPRODUZIONE</div>
+          <div id="track-title" class="track-title">—</div>
+          <div id="track-artist" class="track-artist">—</div>
+        </div>
+        <div class="player-controls">
+          <div class="volume-wrap">
+            <span>🔉</span>
+            <input id="volume-slider" type="range" min="0" max="1" step="0.01" value="0.35" class="volume-slider">
+            <span>🔊</span>
+          </div>
+          <button id="music-toggle" class="btn-sm">⏸ Pausa musica</button>
+        </div>
+        <div id="music-progress" class="music-progress">
+          <div id="music-bar" class="music-bar"></div>
+        </div>
+        <audio id="audio-player" crossorigin="anonymous"></audio>
+      </div>
+
+      <!-- Chat -->
+      <div class="chat-wrap">
+        <div id="chat-messages" class="chat-messages"></div>
+        <form id="chat-form" class="chat-form" autocomplete="off">
+          <input id="chat-input" type="text" placeholder="Scrivi un messaggio..." maxlength="200">
+          <button type="submit" class="btn-send">➤</button>
+        </form>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
