@@ -1,0 +1,34 @@
+<template>
+  <style>
+    #root { position: absolute; inset: 0; overflow: hidden; }
+    #o-title { position: absolute; left: 80px; right: 80px; top: 200px; font-family: "Playfair Display", serif; color: #1f1a16; }
+    #o-kicker { font-family: "Oswald", sans-serif; font-weight: 700; font-size: 40px; letter-spacing: .14em; color: #d42f26; text-transform: uppercase; }
+    #o-h1 { font-weight: 900; font-size: 150px; line-height: .95; letter-spacing: -.02em; margin-top: 8px; }
+    #o-h2 { font-style: italic; font-size: 76px; line-height: 1.05; margin-top: 10px; }
+    #o-h2 .w { position: relative; display: inline-block; }
+    #o-under { position: absolute; left: -8px; bottom: -18px; width: 106%; height: 34px; overflow: visible; }
+    #o-photo { position: absolute; left: 120px; top: 560px; width: 840px; }
+    #o-credit { position: absolute; left: 0; right: 0; top: 1630px; text-align: center; }
+    #o-credit span { display: inline-block; background: rgba(31,26,22,.78); color: #f6f0e1; font-family: "Inter", sans-serif; font-size: 22px; padding: 4px 12px; }
+  </style>
+  <div id="root" data-composition-id="oggi" data-width="1080" data-height="1920">
+    <div id="o-title">
+      <div id="o-kicker">1945 → oggi</div>
+      <div id="o-h1">Parma</div>
+      <div id="o-h2">dal dopoguerra <span class="w">a oggi<svg id="o-under" viewBox="0 0 400 34" preserveAspectRatio="none"><path id="o-under-path" d="M6 22 C 110 10, 220 28, 300 16 S 380 14, 396 18" fill="none" stroke="#d42f26" stroke-width="12" stroke-linecap="round" pathLength="100" stroke-dasharray="100 120" stroke-dashoffset="110"/></svg></span></div>
+    </div>
+    <img id="o-photo" src="assets/parma-oggi.png" alt="Illustrazione: Battistero e Duomo di Parma" />
+    <div id="o-credit" data-layout-ignore><span>Illustrazioni generate per questo video · Mappa: Natural Earth</span></div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    tl.fromTo("#o-kicker", { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.3, ease: "power3.out" }, 0.0);
+    tl.fromTo("#o-h1", { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, 0.1);
+    tl.fromTo("#o-h2", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, 0.3);
+    tl.fromTo("#o-photo", { opacity: 0, y: 260, rotation: 6, scale: 1.1 }, { opacity: 1, y: 0, rotation: 1.5, scale: 1, duration: 0.55, ease: "back.out(1.3)" }, 0.55);
+    tl.fromTo("#o-under-path", { attr: { "stroke-dashoffset": 110 } }, { attr: { "stroke-dashoffset": 0 }, duration: 0.6, ease: "power2.inOut" }, 1.2);
+    tl.fromTo("#o-photo", { scale: 1 }, { scale: 1.04, duration: 1.5, ease: "none", immediateRender: false }, 1.1);
+    tl.fromTo("#o-credit", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 1.6);
+    window.__timelines["oggi"] = tl;
+  </script>
+</template>
