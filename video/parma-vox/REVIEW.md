@@ -19,7 +19,7 @@ sostituire `ruins-1945.png` e `parma-oggi.png` con foto di pubblico dominio (rit
 
 - `giornale` (0–3,4 s): ritaglio di giornale, sottolineatura rossa che si disegna su «libera», rovine ritagliate, «1945» cerchiato.
 - `mappa` (3,4–6,7 s): zoom Italia → Emilia-Romagna → Parma (viewBox SVG, tratti a spessore costante), Po, cerchio rosso, cartellino PARMA.
-- `oggi` (6,7–10 s): titolo «Parma dal dopoguerra a oggi», sottolineatura su «a oggi», Battistero e Duomo ritagliati.
+- `oggi` (6,7–10 s): titolo «Parma dal dopoguerra a oggi», sottolineatura su «a oggi», Battistero e Duomo ritagliati, cartellino rosso «eclettix.com» che entra a timbro a 7,85 s (resta 2,1 s, dentro la fascia sicura sopra 1330 px).
 
 ## Revisione (cosa ho visto e corretto)
 

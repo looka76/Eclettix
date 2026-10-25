@@ -7,7 +7,9 @@
     #o-h2 { font-style: italic; font-size: 76px; line-height: 1.05; margin-top: 10px; }
     #o-h2 .w { position: relative; display: inline-block; }
     #o-under { position: absolute; left: -8px; bottom: -18px; width: 106%; height: 34px; overflow: visible; }
-    #o-photo { position: absolute; left: 120px; top: 560px; width: 840px; }
+    #o-photo { position: absolute; left: 190px; top: 540px; width: 700px; }
+    #o-url { position: absolute; left: 0; right: 0; top: 1255px; text-align: center; }
+    #o-url span { display: inline-block; background: #d42f26; color: #f6f0e1; font-family: "Oswald", sans-serif; font-weight: 700; font-size: 64px; letter-spacing: .06em; padding: 8px 34px; box-shadow: 6px 8px 0 #1f1a16; }
     #o-credit { position: absolute; left: 0; right: 0; top: 1630px; text-align: center; }
     #o-credit span { display: inline-block; background: rgba(31,26,22,.78); color: #f6f0e1; font-family: "Inter", sans-serif; font-size: 22px; padding: 4px 12px; }
   </style>
@@ -18,6 +20,7 @@
       <div id="o-h2">dal dopoguerra <span class="w">a oggi<svg id="o-under" viewBox="0 0 400 34" preserveAspectRatio="none"><path id="o-under-path" d="M6 22 C 110 10, 220 28, 300 16 S 380 14, 396 18" fill="none" stroke="#d42f26" stroke-width="12" stroke-linecap="round" pathLength="100" stroke-dasharray="100 120" stroke-dashoffset="110"/></svg></span></div>
     </div>
     <img id="o-photo" src="assets/parma-oggi.png" alt="Illustrazione: Battistero e Duomo di Parma" />
+    <div id="o-url" data-layout-allow-overlap><span>eclettix.com</span></div>
     <div id="o-credit" data-layout-ignore><span>Illustrazioni generate per questo video · Mappa: Natural Earth</span></div>
   </div>
   <script>
@@ -29,6 +32,7 @@
     tl.fromTo("#o-under-path", { attr: { "stroke-dashoffset": 110 } }, { attr: { "stroke-dashoffset": 0 }, duration: 0.6, ease: "power2.inOut" }, 1.2);
     tl.fromTo("#o-photo", { scale: 1 }, { scale: 1.04, duration: 1.5, ease: "none", immediateRender: false }, 1.1);
     tl.fromTo("#o-credit", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 1.6);
+    tl.fromTo("#o-url span", { opacity: 0, scale: 1.4, rotation: -8 }, { opacity: 1, scale: 1, rotation: -3, duration: 0.3, ease: "back.out(2)" }, 1.15);
     window.__timelines["oggi"] = tl;
   </script>
 </template>
