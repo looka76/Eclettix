@@ -145,6 +145,18 @@ main{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px
 .map-tools .icon-btn[aria-pressed="true"]{background:var(--pink);border-color:var(--pink);color:#1a0b14}
 .map-hint{position:absolute;left:10px;bottom:10px;z-index:2;font-size:.72rem;color:var(--muted);background:color-mix(in srgb,var(--night) 80%,transparent);padding:5px 9px;border-radius:9px;max-width:calc(100% - 80px)}
 .map-hint.on{color:var(--night);background:var(--pink);font-weight:700}
+.map-hint.guide{display:flex;flex-direction:column;gap:6px;left:10px;right:10px;max-width:none;font-size:.8rem;padding:10px 12px;border-radius:12px}
+.map-hint.guide .gbtns{display:flex;gap:6px;flex-wrap:wrap}
+.map-hint.guide .btn{height:30px;font-size:.74rem;padding:0 10px;background:var(--night);color:var(--sand);border-color:var(--night)}
+.map-ctl{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.map-ctl .seg{display:inline-flex;background:var(--night-2);border:1px solid var(--line);border-radius:12px;padding:3px}
+.map-ctl .seg button{height:32px;padding:0 12px;border:0;border-radius:9px;background:none;color:var(--muted);font-weight:700;font-size:.8rem;cursor:pointer}
+.map-ctl .seg button[aria-pressed="true"]{background:var(--night-3);color:var(--sand)}
+.map-ctl .lead{flex:1 1 260px;font-size:.82rem;color:var(--muted);min-width:0}
+.map-box.custom{background:#0b0a12}
+.mk.unplaced{opacity:.55}
+.mk.unplaced .core circle{stroke-dasharray:4 3}
+.tag-todo{font-size:.62rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--warn);margin-left:6px}
 .mk{cursor:pointer;transform:scale(var(--inv,1))}
 .mk .halo{opacity:0;transition:opacity .2s}
 .mk.sel .halo{opacity:1}
@@ -330,11 +342,13 @@ footer.legal{font-size:.75rem;color:var(--muted);border-top:1px solid var(--line
 <section class="view" id="v-mappa" data-view="mappa" hidden>
   <div class="sec-head">
     <div><span class="eyebrow">Mappa interattiva</span><h2>Lo Stato di Leonida</h2></div>
-    <p>Trascina per spostarti, pizzica o usa + e − per lo zoom. Tocca un segnaposto per i dettagli. Con il pulsante segnaposto aggiungi i tuoi punti.</p>
+    <p>Trascina per spostarti, pizzica o usa + e − per lo zoom. Tocca un segnaposto per i dettagli. Con «Usa la tua mappa» lavori sulla mappa vera del gioco.</p>
   </div>
+  <div class="map-ctl" id="mapCtl"></div>
+  <input type="file" id="mapFile" accept="image/*" hidden>
   <div class="chips" id="mapFilters" role="group" aria-label="Filtra i segnaposti"></div>
   <div class="map-wrap">
-    <div class="map-box">
+    <div class="map-box" id="mapBox">
       <svg id="map" viewBox="0 0 1000 1300" preserveAspectRatio="xMidYMid meet" aria-label="Mappa schematica di Leonida">
         <defs>
           <radialGradient id="gSea" cx="60%" cy="40%" r="80%"><stop offset="0" stop-color="#164a66"/><stop offset="1" stop-color="#0b2536"/></radialGradient>
@@ -344,7 +358,7 @@ footer.legal{font-size:.75rem;color:var(--muted);border-top:1px solid var(--line
           <pattern id="pCity" width="12" height="12" patternUnits="userSpaceOnUse"><rect x="1" y="1" width="5" height="5" fill="#e9b7d0" opacity=".35"/><rect x="7" y="6" width="4" height="5" fill="#e9b7d0" opacity=".25"/></pattern>
           <filter id="fShadow" x="-10%" y="-10%" width="120%" height="120%"><feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#000" flood-opacity=".45"/></filter>
         </defs>
-        <rect x="-2000" y="-2000" width="5000" height="5300" fill="url(#gSea)"/>
+        <rect id="seaBg" x="-2000" y="-2000" width="5000" height="5300" fill="url(#gSea)"/>
         <g id="vp">
           <g id="mapBase"></g>
           <g id="mapLabels"></g>
@@ -896,11 +910,23 @@ function renderHomeProgress(){
    MAPPA
    ============================================================ */
 const svg = $("#map"), vp = $("#vp");
-const VBW=1000, VBH=1300;
+const VBW=1000; let VBH=1300;
+const MYMAP = {url:null, w:0, h:0};
+if(!S.cpos) S.cpos={};
+const custom = ()=>!!(S.useCustom && MYMAP.url);
 let T = {k:1, x:0, y:0};
 const MIN_K=.8, MAX_K=7;
 
 function drawBase(){
+  VBH = custom() ? Math.round(VBW*MYMAP.h/MYMAP.w) : 1300;
+  svg.setAttribute("viewBox", `0 0 ${VBW} ${VBH}`);
+  $("#mapBox").classList.toggle("custom", custom());
+  $("#seaBg").style.display = custom() ? "none" : "";
+  if(custom()){
+    $("#mapBase").innerHTML = `<image href="${MYMAP.url}" x="0" y="0" width="${VBW}" height="${VBH}" preserveAspectRatio="none"/>`;
+    $("#mapLabels").innerHTML = "";
+    return;
+  }
   const coast = "M 70 150 C 300 110, 600 90, 900 100 C 945 200, 940 320, 910 430 C 885 540, 878 640, 862 740 C 852 820, 852 900, 822 980 C 792 1040, 722 1070, 642 1060 C 572 1050, 502 1000, 472 940 C 442 870, 430 800, 400 730 C 370 660, 345 580, 330 500 C 322 440, 300 405, 250 398 C 190 392, 120 372, 82 322 C 56 272, 56 200, 70 150 Z";
   const keys = [[770,1085,26,9,-25],[728,1112,30,10,-20],[690,1140,22,8,-15],[640,1160,52,16,-12],[600,1168,34,12,-8],[545,1200,24,9,-5],[505,1178,30,10,-4],[455,1196,26,9,0],[418,1206,32,11,4],[370,1222,26,9,8],[330,1236,20,8,10],[700,1205,10,6,0],[722,1222,8,5,0],[688,1225,7,5,0],[300,700,22,9,30],[330,724,14,7,20]];
   const isl = keys.map(([x,y,rx,ry,r])=>`<ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${ry}" transform="rotate(${r} ${x} ${y})" fill="url(#gLand)" stroke="#e8d9b0" stroke-opacity=".55" stroke-width="2"/>`).join("");
@@ -942,23 +968,32 @@ function drawBase(){
     sublabels.map(([t,x,y])=>`<text x="${x}" y="${y}" text-anchor="middle" class="map-sub" style="font-size:calc(12px * var(--lk,1))">${esc(t)}</text>`).join("");
 }
 
-function allPlaces(){ return PLACES.concat(S.pins.map(p=>Object.assign({cat:"mio", v:"mine"}, p))); }
+function allPlaces(){
+  const fr = custom() ? "c" : "s";
+  const base = PLACES.map(p=>{
+    if(!custom()) return p;
+    const cp = S.cpos[p.id];
+    return cp ? Object.assign({}, p, {x:cp.x, y:cp.y}) : Object.assign({}, p, {y:Math.round(p.y*VBH/1300), unplaced:true});
+  });
+  return base.concat(S.pins.filter(p=>(p.frame||"s")===fr).map(p=>Object.assign({cat:"mio", v:"mine"}, p)));
+}
 let selected = null;
 function renderMarkers(){
   const list = allPlaces().filter(p=>S.filters[p.cat]);
-  $("#mapMarkers").innerHTML = list.map(p=>{
+  $("#mapMarkers").innerHTML = list.filter(p=>!p.unplaced).map(p=>{
     const c = CATS[p.cat];
-    return `<g transform="translate(${p.x} ${p.y})" data-id="${p.id}"><g class="mk${S.found[p.id]?" found":""}${selected===p.id?" sel":""}">
+    return `<g transform="translate(${p.x} ${p.y})" data-id="${p.id}"><g class="mk${S.found[p.id]?" found":""}${selected===p.id?" sel":""}${p.unplaced?" unplaced":""}">
       <circle class="halo" r="22" fill="none" stroke="${c.color}" stroke-width="3"/>
       <g class="core"><circle r="14" fill="#140f24" stroke="${c.color}" stroke-width="3"/>
       <text text-anchor="middle" dy="5" font-size="14" font-weight="800" fill="${c.color}" font-family="system-ui">${c.glyph}</text></g>
       <circle r="24" fill="transparent"/></g></g>`;
   }).join("");
   applyT();
+  renderMapCtl();
   $("#mapCount").textContent = list.length;
   $("#mapList").innerHTML = list.length ? list.map(p=>`<button class="li-btn${selected===p.id?" sel":""}" data-goto="${p.id}">
       <span class="dot" style="background:${CATS[p.cat].color}"></span>
-      <span style="min-width:0"><b>${esc(p.name)}${S.found[p.id]?" ✓":""}</b><small>${esc(p.where||CATS[p.cat].label)}</small></span></button>`).join("")
+      <span style="min-width:0"><b>${esc(p.name)}${S.found[p.id]?" ✓":""}${p.unplaced?'<span class="tag-todo">da posizionare</span>':""}</b><small>${esc(p.where||CATS[p.cat].label)}</small></span></button>`).join("")
     : '<p class="empty">Nessuna categoria attiva. Accendi un filtro sopra la mappa.</p>';
 }
 function renderFilters(){
@@ -1028,7 +1063,10 @@ function endPtr(e){
   if(ptrs.size===0){
     if(g && g.type==="pan" && moved<7){
       const mk = g.target.closest && g.target.closest("[data-id]");
-      if(addMode){
+      if(placing){
+        const p = toMap(svgPoint(e.clientX, e.clientY));
+        placeCurrent(Math.round(p.x), Math.round(p.y));
+      } else if(addMode){
         const p = toMap(svgPoint(e.clientX, e.clientY));
         openPinForm(Math.round(p.x), Math.round(p.y));
       } else if(mk){ openPlace(mk.dataset.id); }
@@ -1050,9 +1088,127 @@ let addMode=false;
 $("#addPin").onclick = ()=>{
   addMode=!addMode; $("#addPin").setAttribute("aria-pressed", addMode);
   svg.classList.toggle("adding", addMode);
-  const h=$("#mapHint"); h.classList.toggle("on", addMode);
-  h.textContent = addMode ? "Tocca la mappa dove vuoi il segnaposto" : "Posizioni indicative · mappa schematica";
+  if(addMode) placing=null;
+  setHint();
 };
+
+/* ---------- La mia mappa ---------- */
+let placing = null; // {queue:[id], i, single}
+function setHint(){
+  const h=$("#mapHint"); h.classList.remove("on","guide");
+  if(placing){
+    const id=placing.queue[placing.i], p=PLACES.find(x=>x.id===id);
+    h.classList.add("on","guide");
+    h.innerHTML = `<span>${placing.single?"Sposta":`Segnaposto ${placing.i+1} di ${placing.queue.length}`}: tocca il punto esatto di <b>«${esc(p.name)}»</b></span>
+      <span style="font-weight:500">${esc(p.where||"")}</span>
+      <span class="gbtns">${placing.single?"":'<button class="btn" data-g="skip">Salta</button>'}<button class="btn" data-g="end">${placing.single?"Annulla":"Fine"}</button></span>`;
+  } else if(addMode){ h.classList.add("on"); h.textContent="Tocca la mappa dove vuoi il segnaposto"; }
+  else h.textContent = custom() ? "La tua mappa · tocca un segnaposto per i dettagli" : "Posizioni indicative · mappa schematica";
+  svg.classList.toggle("adding", !!(addMode||placing));
+}
+$("#mapHint").addEventListener("click", e=>{
+  const b=e.target.closest("[data-g]"); if(!b||!placing) return;
+  if(b.dataset.g==="skip") nextPlacing(); else { placing=null; setHint(); renderMarkers(); }
+});
+function nextPlacing(){
+  placing.i++;
+  if(placing.i>=placing.queue.length){ placing=null; toast("Sistemazione completata"); }
+  setHint(); renderMarkers();
+}
+function placeCurrent(x,y){
+  const id=placing.queue[placing.i];
+  S.cpos[id]={x,y}; save();
+  if(placing.single){ placing=null; setHint(); renderMarkers(); toast("Posizione salvata"); }
+  else nextPlacing();
+}
+function startGuide(){
+  const q = PLACES.filter(p=>S.filters[p.cat] && !S.cpos[p.id]).map(p=>p.id);
+  if(!q.length){ toast("Tutti i segnaposti visibili sono già posizionati"); return; }
+  if(addMode) $("#addPin").click();
+  placing={queue:q, i:0}; setHint(); renderMarkers();
+  $("#mapBox").scrollIntoView({block:"center", behavior:"smooth"});
+}
+function renderMapCtl(){
+  const el=$("#mapCtl");
+  if(!MYMAP.url){
+    el.innerHTML = `<button class="btn primary" data-mm="load">Usa la tua mappa</button>
+      <span class="lead">Carica uno screenshot della mappa di gioco o la mappa ufficiale: l'immagine resta solo su questo dispositivo e i segnaposti si mettono sopra.</span>`;
+    return;
+  }
+  const todo = PLACES.filter(p=>!S.cpos[p.id]).length;
+  el.innerHTML = `<span class="seg" role="group" aria-label="Tipo di mappa"><button data-mm="mine" aria-pressed="${!!S.useCustom}">La mia mappa</button><button data-mm="schema" aria-pressed="${!S.useCustom}">Schematica</button></span>
+    ${S.useCustom?`<button class="btn small${todo?" primary":""}" data-mm="guide">${todo?`Posiziona i segnaposti (${todo})`:"Riposiziona i segnaposti"}</button>`:""}
+    <button class="btn small" data-mm="load">Sostituisci immagine</button>
+    <button class="btn small" data-mm="del">Rimuovi</button>`;
+}
+$("#mapCtl").addEventListener("click", e=>{
+  const b=e.target.closest("[data-mm]"); if(!b) return;
+  const a=b.dataset.mm;
+  if(a==="load") $("#mapFile").click();
+  if(a==="mine"||a==="schema"){ S.useCustom = a==="mine"; placing=null; save(); drawBase(); fitMap(); renderMarkers(); setHint(); }
+  if(a==="guide") startGuide();
+  if(a==="del"){
+    openSheet(`<span class="eyebrow">La mia mappa</span><h3 id="sheetTitle">Rimuovere l'immagine?</h3>
+      <p>Tornerai alla mappa schematica. Le posizioni che hai sistemato restano salvate e tornano se carichi di nuovo la stessa immagine.</p>
+      <div class="acts"><button class="btn primary" data-mmdel>Rimuovi</button><button class="btn" data-close>Annulla</button></div>`);
+  }
+});
+$("#sheet").addEventListener("click", async e=>{
+  if(e.target.closest("[data-mmdel]")){
+    try{ await idb("delete","map"); }catch(err){}
+    if(MYMAP.url) URL.revokeObjectURL(MYMAP.url);
+    MYMAP.url=null; S.useCustom=false; save(); closeSheet(); drawBase(); fitMap(); renderMarkers(); setHint();
+  }
+  const mv=e.target.closest("[data-move]");
+  if(mv){ const id=mv.dataset.move; closeSheet(); if(addMode) $("#addPin").click(); placing={queue:[id], i:0, single:true}; setHint(); renderMarkers(); $("#mapBox").scrollIntoView({block:"center", behavior:"smooth"}); }
+  const rs=e.target.closest("[data-unplace]");
+  if(rs){ delete S.cpos[rs.dataset.unplace]; save(); closeSheet(); renderMarkers(); toast("Posizione azzerata"); }
+});
+
+function idb(op, key, val){
+  return new Promise((res, rej)=>{
+    let rq; try{ rq = indexedDB.open("atlante-leonida", 1); }catch(err){ rej(err); return; }
+    rq.onupgradeneeded = ()=>rq.result.createObjectStore("files");
+    rq.onerror = ()=>rej(rq.error);
+    rq.onsuccess = ()=>{
+      try{
+        const db=rq.result, tx=db.transaction("files", op==="get"?"readonly":"readwrite"), st=tx.objectStore("files");
+        const r = op==="get" ? st.get(key) : op==="put" ? st.put(val, key) : st.delete(key);
+        r.onsuccess = ()=>res(r.result); r.onerror = ()=>rej(r.error);
+      }catch(err){ rej(err); }
+    };
+  });
+}
+function loadImage(url){ return new Promise((res,rej)=>{ const im=new Image(); im.onload=()=>res(im); im.onerror=rej; im.src=url; }); }
+async function useBlob(blob){
+  const url = URL.createObjectURL(blob);
+  const im = await loadImage(url);
+  if(MYMAP.url) URL.revokeObjectURL(MYMAP.url);
+  Object.assign(MYMAP, {url, w:im.naturalWidth, h:im.naturalHeight});
+}
+$("#mapFile").addEventListener("change", async e=>{
+  const f = e.target.files && e.target.files[0]; e.target.value=""; if(!f) return;
+  toast("Carico la mappa…");
+  try{
+    // ridimensiona fino a 4096 px per tenere leggera la memoria su iPhone
+    const src = URL.createObjectURL(f); const im = await loadImage(src);
+    const k = Math.min(1, 4096/Math.max(im.naturalWidth, im.naturalHeight));
+    const c = document.createElement("canvas"); c.width=Math.round(im.naturalWidth*k); c.height=Math.round(im.naturalHeight*k);
+    c.getContext("2d").drawImage(im,0,0,c.width,c.height); URL.revokeObjectURL(src);
+    const blob = await new Promise(r=>c.toBlob(r,"image/jpeg",.9));
+    await useBlob(blob);
+    let stored=true; try{ await idb("put","map",blob); }catch(err){ stored=false; }
+    S.useCustom=true; save(); drawBase(); fitMap(); renderMarkers(); setHint();
+    toast(stored ? "Mappa caricata" : "Mappa caricata solo per questa sessione");
+    if(PLACES.some(p=>!S.cpos[p.id])) setTimeout(()=>openSheet(`<span class="eyebrow">La mia mappa</span><h3 id="sheetTitle">Sistema i segnaposti</h3>
+      <p>Le posizioni dei luoghi della guida sono stimate e non coincidono con la tua immagine. Con la sistemazione guidata ti propongo un luogo alla volta: fai zoom, trova il punto e toccalo. Puoi saltare quelli che non conosci e riprendere quando vuoi.</p>
+      <div class="acts"><button class="btn primary" data-close data-startguide>Inizia ora</button><button class="btn" data-close>Più tardi</button></div>`), 300);
+  }catch(err){ toast("Non riesco ad aprire questa immagine. Prova con un JPG o PNG."); }
+});
+document.addEventListener("click", e=>{ if(e.target.closest("[data-startguide]")) setTimeout(startGuide, 50); });
+async function restoreMyMap(){
+  try{ const blob = await idb("get","map"); if(blob){ await useBlob(blob); drawBase(); fitMap(); renderMarkers(); setHint(); } }catch(err){}
+}
 
 function focusPlace(id){
   const p = allPlaces().find(x=>x.id===id); if(!p) return;
@@ -1090,12 +1246,14 @@ function openPlace(id){
     <h3 id="sheetTitle" style="font-size:1.2rem">${esc(p.name)}</h3>
     ${meta?`<div class="row" style="display:flex;gap:6px;flex-wrap:wrap">${meta}</div>`:""}
     ${p.where?`<p><b>Dove:</b> ${esc(p.where)}</p>`:""}
+    ${p.unplaced?`<p class="note">Sulla tua mappa questo luogo non è ancora posizionato: tocca «Posiziona» e poi il punto giusto.</p>`:""}
     ${p.desc?`<p>${esc(p.desc)}</p>`:""}
     ${p.loot?`<p><b>Bottino:</b> ${esc(p.loot)}</p>`:""}
     ${p.how?`<p><b>Come sbloccarlo:</b> ${esc(p.how)}</p>`:""}
     <div class="acts">
       ${checkbox(p.id)}
       <span style="flex:1"></span>
+      ${custom() && p.cat!=="mio"?`<button class="btn small" data-move="${p.id}">${p.unplaced?"Posiziona":"Sposta"}</button>${p.unplaced?"":`<button class="btn small" data-unplace="${p.id}">Azzera</button>`}`:""}
       ${p.cat==="mio"?`<button class="btn small" data-delpin="${p.id}">Elimina</button>`:""}
       <button class="btn small" data-close>Chiudi</button>
     </div>`);
@@ -1119,7 +1277,7 @@ function openPinForm(x,y){
   $("#pinForm").addEventListener("submit", ev=>{
     ev.preventDefault();
     const name = $("#pinName").value.trim(); if(!name) return;
-    S.pins.push({id:"p-"+Date.now(), name, desc:$("#pinNote").value.trim(), where:"Il tuo segnaposto", x, y});
+    S.pins.push({id:"p-"+Date.now(), name, desc:$("#pinNote").value.trim(), where:"Il tuo segnaposto", x, y, frame: custom()?"c":"s"});
     S.filters.mio = true; save(); renderFilters();
     closeSheet(); renderMarkers(); toast("Segnaposto salvato");
     if(addMode) $("#addPin").click();
@@ -1373,7 +1531,7 @@ document.addEventListener("click", e=>{
 document.addEventListener("change", e=>{ if(e.target.matches("[data-found]") && location.hash==="#missioni") setTimeout(()=>{ const y=scrollY; renderMissions(); scrollTo(0,y); },0); });
 
 function renderAll(){ renderHomeProgress(); renderMissions(); renderFilters(); renderMarkers(); renderGuide(); renderCheats(); renderSecrets(); renderColl(); }
-drawBase(); renderAll(); route();
+drawBase(); renderAll(); route(); setHint(); restoreMyMap();
 
 if("serviceWorker" in navigator && /^https?:$/.test(location.protocol) && !/claude/.test(location.hostname)){
   try{ navigator.serviceWorker.register("sw.js").catch(()=>{}); }catch(e){}
