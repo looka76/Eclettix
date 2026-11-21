@@ -74,10 +74,10 @@ main{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px
 .view{max-width:1100px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
 .view[hidden]{display:none!important}
 
-.nav{position:fixed;left:0;right:0;bottom:0;z-index:30;display:grid;grid-template-columns:repeat(6,1fr);
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:30;display:grid;grid-template-columns:repeat(7,1fr);
   padding-left:max(6px,env(safe-area-inset-left,0px));padding-right:max(6px,env(safe-area-inset-right,0px));padding-bottom:env(safe-area-inset-bottom,0px);
   background:color-mix(in srgb,var(--night) 92%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--line)}
-.nav a{height:var(--nav-h);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;text-decoration:none;color:var(--muted);font-size:.66rem;font-weight:600}
+.nav a{height:var(--nav-h);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;text-decoration:none;color:var(--muted);font-size:.6rem;font-weight:600;min-width:0;letter-spacing:-.01em}
 .nav a svg{width:22px;height:22px}
 .nav a[aria-current="page"]{color:var(--sand)}
 .nav a[aria-current="page"] svg{color:var(--pink)}
@@ -245,6 +245,24 @@ td.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:n
 mark{background:color-mix(in srgb,var(--orange) 40%,transparent);color:inherit;border-radius:3px}
 .empty{color:var(--muted);text-align:center;padding:30px 10px;font-size:.9rem}
 .toast{position:fixed;left:50%;bottom:calc(var(--nav-h) + 18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:70;background:var(--sand);color:var(--night);font-weight:700;font-size:.85rem;padding:10px 16px;border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,.4)}
+/* ---------- missioni ---------- */
+.ms-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.ms{display:grid;grid-template-columns:34px 1fr auto;gap:10px;align-items:start;padding:11px 0;border-top:1px solid var(--line)}
+.ms:first-child{border-top:0}
+.ms .num{font-family:var(--f-mono);font-size:.74rem;color:var(--muted);padding-top:3px;font-variant-numeric:tabular-nums}
+.ms .nm{font-weight:700;font-size:.93rem;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.ms .tip{font-size:.84rem;color:var(--muted);margin-top:3px}
+.ms .check{padding-top:1px}
+.ms.done .nm>span:first-child{text-decoration:line-through;text-decoration-color:var(--teal);color:var(--muted)}
+.ms .who{font-family:var(--f-mono);font-size:.66rem;font-weight:700;padding:2px 6px;border-radius:6px;border:1px solid var(--line);color:var(--orange)}
+.veil{filter:blur(5px);cursor:pointer;user-select:none}
+.ch-prog{display:flex;align-items:center;gap:10px;font-family:var(--f-mono);font-size:.74rem;color:var(--muted)}
+.ch-prog .bar{width:70px;flex:none}
+.sf-ms{display:flex;flex-direction:column;gap:6px;margin:4px 0 0;padding:0;list-style:none}
+.sf-ms li{display:flex;align-items:flex-start;gap:8px;font-size:.86rem}
+.sf-ms li .check{flex:none}
+.warnbox{border:1px solid color-mix(in srgb,var(--warn) 45%,transparent);background:color-mix(in srgb,var(--warn) 8%,var(--night-2));border-radius:14px;padding:12px 14px;font-size:.86rem}
+.warnbox b{color:var(--warn)}
 footer.legal{font-size:.75rem;color:var(--muted);border-top:1px solid var(--line);padding-top:14px}
 </style>
 
@@ -262,6 +280,7 @@ footer.legal{font-size:.75rem;color:var(--muted);border-top:1px solid var(--line
 <nav class="nav" aria-label="Sezioni">
   <a href="#home" data-v="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 11 12 4l9 7v9h-6v-6H9v6H3z"/></svg>Home</a>
   <a href="#mappa" data-v="mappa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="m3 6 6-2 6 2 6-2v14l-6 2-6-2-6 2z"/><path d="M9 4v14M15 6v14"/></svg>Mappa</a>
+  <a href="#missioni" data-v="missioni"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path d="M5 21V4"/><path d="M5 4h11l-2 4 2 4H5"/></svg>Missioni</a>
   <a href="#guida" data-v="guida"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5M8 7h7"/></svg>Guida</a>
   <a href="#trucchi" data-v="trucchi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="2" y="7" width="20" height="11" rx="5"/><path d="M7 10v5M4.5 12.5h5"/><circle cx="16" cy="11" r="1" fill="currentColor"/><circle cx="18" cy="14" r="1" fill="currentColor"/></svg>Trucchi</a>
   <a href="#segreti" data-v="segreti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3c4 3 7 6 7 10a7 7 0 0 1-14 0c0-4 3-7 7-10z"/><circle cx="12" cy="13" r="2.5"/></svg>Segreti</a>
@@ -279,7 +298,8 @@ footer.legal{font-size:.75rem;color:var(--muted);border-top:1px solid var(--line
       <p>Mappa interattiva, trucchi con le sequenze del D-pad, relitti di Kenton, segreti, armi uniche e checklist dei collezionabili. Tutto in italiano, da consultare mentre giochi.</p>
       <div class="row" style="display:flex;gap:8px;flex-wrap:wrap">
         <a class="btn primary" href="#mappa">Apri la mappa</a>
-        <a class="btn" href="#trucchi">Vedi i trucchi</a>
+        <a class="btn" href="#missioni">Missioni</a>
+        <a class="btn" href="#trucchi">Trucchi</a>
       </div>
     </div>
   </div>
@@ -363,11 +383,24 @@ footer.legal{font-size:.75rem;color:var(--muted);border-top:1px solid var(--line
   <div class="tabs" role="tablist" id="guideTabs">
     <button role="tab" aria-selected="true" data-t="inizio">Primi passi</button>
     <button role="tab" aria-selected="false" data-t="soldi">Soldi</button>
-    <button role="tab" aria-selected="false" data-t="storia">Storia</button>
     <button role="tab" aria-selected="false" data-t="regioni">Regioni</button>
     <button role="tab" aria-selected="false" data-t="attivita">Attività</button>
   </div>
   <div id="guideBody"></div>
+</section>
+
+<!-- ================= MISSIONI ================= -->
+<section class="view" id="v-missioni" data-view="missioni" hidden>
+  <div class="sec-head">
+    <div><span class="eyebrow">Missioni</span><h2>Storia e missioni secondarie</h2></div>
+    <p>Spunta le missioni completate. I titoli più avanti della tua partita restano sfocati: toccane uno per svelarlo, oppure mostra tutto.</p>
+  </div>
+  <div class="tabs" role="tablist" id="missTabs">
+    <button role="tab" aria-selected="true" data-t="storia">Storia · 91</button>
+    <button role="tab" aria-selected="false" data-t="secondarie">Strangers &amp; Freaks</button>
+    <button role="tab" aria-selected="false" data-t="consigli">Non ritorno e mancabili</button>
+  </div>
+  <div id="missBody"></div>
 </section>
 
 <!-- ================= TRUCCHI ================= -->
@@ -614,23 +647,157 @@ const TIPS_MONEY = [
   ["Metti al sicuro il bottino","Muori o ti arrestano e perdi i contanti che hai addosso. Deposita appena puoi.","Sempre"]
 ];
 
+/* Missioni principali. p: J = Jason, L = Lucia, JL = entrambi. f: opz = opzionale, pnr = punto di non ritorno, manc = c'è qualcosa di mancabile */
 const CHAPTERS = [
-  {n:1, t:"Just Like Paradise", tag:"Leonida Keys", count:"22–34 missioni secondo le fonti",
-   body:"Lucia è in prigione, mentre Jason lavora per Brian fra le isole delle Keys. Il capitolo introduce Kenton e le immersioni (con «Island Dreams») e si chiude con il ritorno in libertà di Lucia. Attenzione: le missioni finali azzerano i contanti che non sono nei Family Savings.",
-   missions:["Island Dreams","Don Gone","Tourist Trap"]},
-  {n:2, t:"Port Gellhorn", tag:"Port Gellhorn", count:"11 missioni principali",
-   body:"Lucia si adatta alla vita a Port Gellhorn. Arrivano Moses (che compra auto) e Dunk (che compra narcotici). Il capitolo finisce con Jason e Lucia sotto assedio in un motel e una fuga dalla polizia con l'auto di Jason.",
-   missions:["Kolt & Associates"]},
-  {n:3, t:"Tits Ass Drug Money", tag:"Vice City", count:"circa 26 missioni",
-   body:"La coppia arriva a Vice City e scivola sempre più a fondo nel mondo criminale della città.",
-   missions:[]},
-  {n:4, t:"Vice City, Baby", tag:"Vice City", count:"",
-   body:"Il crimine si fa più grande e più rischioso, fra avvocati, carichi pesanti e feste da organizzare.",
-   missions:["Lawyer Up","Heavy Lifting","Fully Catered","Sunset"]},
-  {n:5, t:"Top of the World, Ma", tag:"Finale", count:"7 missioni",
-   body:"Il capitolo più corto e il finale della storia. Finirlo sblocca il trucco da 250.000 $ e la Concentrazione illimitata.",
-   missions:["Bird in the Hand","Protective Custody"]}
+  {n:1, t:"Just Like Paradise", tag:"Leonida Keys",
+   body:"Lucia è in prigione, mentre Jason fa lavori per Brian nelle Keys. Il capitolo introduce Kenton e le immersioni e si chiude con la svolta che porta al Capitolo 2.",
+   missions:[
+    {n:"Prologue", p:"L", tip:"Si comincia nei panni di Lucia."},
+    {n:"Gone Fishing", p:"J"},
+    {n:"Gear Up", p:"J", tip:"Buon momento per passare all'Ammu-Nation di Key Lento: silenziatore e giubbotto."},
+    {n:"Just a Scratch", p:"J", tip:"Si sblocca insieme a «Lab Fees»: puoi farle nell'ordine che preferisci."},
+    {n:"Lab Fees", p:"J", tip:"Ordine libero con «Just a Scratch»."},
+    {n:"Unwanted Attention", p:"J"},
+    {n:"Pipework", p:"J"},
+    {n:"Hey Arnold!", p:"J"},
+    {n:"Island Dreams", p:"J", tip:"Contiene il primo relitto (Nuestra Señora del Ocio, 10 dobloni). Dopo, Kenton ti chiama e si aprono le immersioni."},
+    {n:"Feng Shui", p:"J"},
+    {n:"Coming Home", p:"J"},
+    {n:"Buck Me", p:"J"},
+    {n:"Clean Up After Donnie", p:"J"},
+    {n:"Down to Earth", p:"J"},
+    {n:"Clear Skies", p:"J"},
+    {n:"Day Release", p:"JL"},
+    {n:"Swamped", p:"J", f:["manc"], tip:"Dopo questa missione il punto di consegna di Donnie (Donnie's Drop-Off) può chiudere: vendigli i narcotici prima."},
+    {n:"Don Gone", p:"J", f:["manc"], tip:"Apri il bagagliaio dell'auto di Donnie prima che venga distrutta: c'è il revolver unico H&L .38."},
+    {n:"Recalibration", p:"J", tip:"Sblocca «Tourist Trap». Prima di proseguire leggi la scheda «Non ritorno e mancabili»."},
+    {n:"Tourist Trap", p:"JL", f:["pnr"], tip:"Sulla mappa compare come «Take Up Mattia's Offer». Ti blocca in tre missioni di fila senza free roam: perdi la casa di Jason e i contanti nel portafoglio e nel nascondiglio."},
+    {n:"Home Sweet Home", p:"JL", tip:"Nessun free roam tra questa e la successiva."},
+    {n:"Discharge Time", p:"JL", tip:"Chiude il capitolo. Restano solo i soldi nei Family Savings."}
+   ]},
+  {n:2, t:"Paradise Lost", tag:"Port Gellhorn",
+   body:"Lucia ricomincia da Port Gellhorn. Le prime otto missioni sono sue; da «Coffee Break» lei e Jason tornano a lavorare insieme. Arrivano Moses, che compra auto, e Dunk.",
+   missions:[
+    {n:"What's in the Bag?", p:"L"},
+    {n:"Ambulance Chaser", p:"L"},
+    {n:"Just Moved In", p:"L"},
+    {n:"Girls' Trip", p:"L"},
+    {n:"Moses", p:"L", tip:"Da qui puoi vendere auto a Moses: è il guadagno migliore del capitolo e non ha un limite giornaliero."},
+    {n:"Daily Driver", p:"L"},
+    {n:"Slam Dunk", p:"L"},
+    {n:"Breakfast Run", p:"L"},
+    {n:"Coffee Break", p:"JL", tip:"Jason e Lucia tornano a giocare in coppia."},
+    {n:"Afternoon Delight", p:"JL"},
+    {n:"Checking Out", p:"JL", f:["pnr"], tip:"Richiede tutte le altre missioni del capitolo e almeno 15.000 $. Salva a mano prima e vendi il bottino a Dunk: alcuni ricettatori spariscono andando avanti."},
+    {n:"Thrillbillies", p:null, f:["opz"], tip:"Le guide non concordano: per alcune è opzionale, per altre serve per proseguire."},
+    {n:"Twist Wrist / Smash / Grab", p:null, f:["opz"], tip:"Stato opzionale da verificare."},
+    {n:"Veteran Hunted", p:null, f:["opz"]}
+   ]},
+  {n:3, t:"Tits, Ass, Drug Money", tag:"Vice City",
+   body:"La coppia arriva a Vice City ed entra sempre più a fondo nel mondo criminale della città. È il capitolo con più missioni obbligatorie.",
+   missions:[
+    {n:"Welcome to Vice City", p:"JL"},
+    {n:"Dealer's Choice"},
+    {n:"Meet the Heders"},
+    {n:"Dubious Provenance"},
+    {n:"Mami Knows Best"},
+    {n:"South Leonida Real Estate"},
+    {n:"Tyrone", tip:"Presenta Tyrone: i suoi incarichi Kitty Litter sono solo per Jason."},
+    {n:"Here, Kitty Kitty"},
+    {n:"Kitty Litter Labs", f:["opz"]},
+    {n:"Car Service"},
+    {n:"Top Billing"},
+    {n:"Boobie Time"},
+    {n:"First Impressions"},
+    {n:"Caught Slipping"},
+    {n:"Crosstown Traffic"},
+    {n:"Credit Check"},
+    {n:"Steal the Zorrusso for Randy", tip:"Introduce Randy e le consegne di auto sportive."},
+    {n:"Sinfrontera National Bank"},
+    {n:"Security Expert"},
+    {n:"Ride or Die"},
+    {n:"Company Property"},
+    {n:"The Missing Link"},
+    {n:"Safe Word"},
+    {n:"Cooties"},
+    {n:"Bricked Up"},
+    {n:"Hidden Charges"},
+    {n:"The Cartel Heist", tip:"Chiude il capitolo."}
+   ]},
+  {n:4, t:"Vice City, Baby", tag:"Vice City",
+   body:"Il colpo si fa più grande: avvocati, feste, agenzie federali. Sull'ordine di metà capitolo le guide differiscono un po'.",
+   missions:[
+    {n:"Ocean Beach", tip:"Apre il capitolo."},
+    {n:"Another Life"},{n:"Company Cars"},{n:"Lawyer Up"},{n:"Party Hard"},{n:"Heavy Lifting"},
+    {n:"Photo/Shoot"},{n:"Making Gainz"},{n:"Watch It"},{n:"Cash Injections"},{n:"Amateur Hour"},
+    {n:"Dirty Work"},{n:"Too Much Baggage"},{n:"Adventures in Babysitting"},{n:"Fresh Evidence"},
+    {n:"Power Play"},{n:"Child's Play"},{n:"Headliners"},{n:"Close Surveillance"},{n:"Delivery Method"},
+    {n:"Team Building"},{n:"Fully Catered"},{n:"VCIA Takedown"},{n:"Sunset"},
+    {n:"Starting From Zero", f:["pnr"], tip:"Ultima del capitolo: porta al finale. Salva a mano prima, perché le scelte della storia sono definitive e non c'è il replay delle missioni."}
+   ]},
+  {n:5, t:"Top of the World, Ma", tag:"Finale",
+   body:"Il capitolo più corto. Il gioco ha più di un finale. Finire la storia sblocca il trucco da 250.000 $ e la Concentrazione illimitata.",
+   missions:[
+    {n:"Bird in the Hand"},{n:"Taking Liberties"},{n:"VC Baby"},{n:"Doggie Bag"},{n:"Operation Savage Glory"},{n:"Protective Custody"},
+    {n:"The End of the Road", f:["pnr"], tip:"La missione finale (alcune guide ne nascondono il nome). Salva a mano prima di iniziarla se vuoi vedere più finali."}
+   ]}
 ];
+CHAPTERS.forEach(c=>c.missions.forEach((m,i)=>{ m.id=`m${c.n}-${i}`; }));
+const MAIN_ALL = CHAPTERS.flatMap(c=>c.missions);
+const MAIN_REQ = MAIN_ALL.filter(m=>!(m.f||[]).includes("opz"));
+
+/* Strangers & Freaks e incarichi secondari. trofeo: true / false / null (non chiaro) */
+const SIDE = [
+  {id:"shirley", who:"Shirley", ch:"Cap. 1", p:"Jason", trofeo:false,
+   desc:"Le commissioni della vicina di Jason. Sono mancabili: falle prima di «Tourist Trap».",
+   ms:["Get Shirley's Rum","Steal the Scooter"], manc:true},
+  {id:"cal", who:"Cal", ch:"Cap. 1", p:"Jason", trofeo:false,
+   desc:"La scommessa di pesca: cattura un pesce pappagallo (stoplight parrotfish) di oltre 2 libbre a ovest di Key Lento e mandagli la foto.",
+   ms:["Sfida di pesca di Cal"], reward:"Trofeo «Baited My Tackle» (bronzo)"},
+  {id:"kenton", who:"Kenton", ch:"Cap. 1+", p:"Jason e Lucia", trofeo:null,
+   desc:"Caccia ai tesori sui relitti delle Keys: 7 set di recupero, 33 scoperte subacquee. Dettagli e posizioni nella sezione Segreti.",
+   ms:["Island Dreams (missione della storia)","Tutti e 7 i relitti","Missione finale di Kenton"], reward:"Soldi per ogni reperto · trofeo segreto «This Was No Boat Accident»"},
+  {id:"kirk", who:"Kirk", ch:"Cap. 1+", p:"Jason e Lucia", trofeo:true,
+   desc:"La caccia allo Skunk Ape, alias Mister Mangrove: cerca la creatura e le effigi appese agli alberi. L'ultima missione è solo per Lucia, parte di notte e non si può iniziare nel Capitolo 1. Ci sono tre finali.",
+   ms:["Cerca lo Skunk Ape","Trova le effigi sugli alberi","Missione finale (Lucia, di notte)"], reward:"Veicolo Mister Mangrove Laird 350"},
+  {id:"kyle", who:"Kyle", ch:"Cap. 2", p:"Jason e Lucia", trofeo:true,
+   desc:"La gang Final Chapter MC tiene il furgone dei prodotti chimici di Kyle in Leonard County: paga 5.000 $ oppure rubalo e semina le 2 stelle, poi parcheggialo nel suo fienile. Seguono i lavori con l'aereo agricolo, pagati via BuckMe.",
+   ms:["Recupera il furgone di Kyle","Check Out McKittrick Farm","Collect Chemicals for Kyle","Buddy?"], reward:"1.000 $ e accesso alle fragole mutate, che danno bonus temporanei"},
+  {id:"billy", who:"Billy", ch:"Cap. 2", p:"Jason e Lucia", trofeo:false,
+   desc:"Moto da cross e lavori con la sua crew.",
+   ms:["Missioni di Billy (moto da cross)","Lavori con la crew","Missione finale di Billy"], reward:"Trofeo «The Lone Rider»"},
+  {id:"moses", who:"Moses", ch:"Cap. 2+", p:"Jason e Lucia", trofeo:null,
+   desc:"Furti d'auto su richiesta. Non è una catena chiusa ma un incarico continuo, senza limite giornaliero.",
+   ms:["Prima consegna a Moses"], reward:"Il metodo migliore per fare soldi a inizio gioco"},
+  {id:"bret", who:"Bret Vogel", ch:"Cap. 2", p:"Solo Jason", trofeo:null,
+   desc:"Missioni di caccia nella natura di Leonida.",
+   ms:["Missioni di caccia di Bret"]},
+  {id:"yago", who:"Yago", ch:"Cap. 3", p:"Jason (alcune)", trofeo:true,
+   desc:"Gare clandestine a Vice City. «Bumper to Bumper» si attiva dopo qualche giorno a Little Cuba, di pomeriggio o sera: porta l'auto di Yago in officina per l'elaborazione con nitro, vinci la gara, semina la polizia e raggiungilo a nord di Vice City.",
+   ms:["Join a Street Race","Bumper to Bumper","Race Against Yago","Brother to Brother"], reward:"3.000 $ per la prima gara vinta · 500 $ per «Bumper to Bumper»", manc:true, nota:"«Race Against Yago» è a tempo e si può perdere. «Bumper to Bumper» e «Brother to Brother» sono solo per Jason."},
+  {id:"yasmani", who:"Yasmani", ch:"Cap. 3", p:"Jason e Lucia", trofeo:false,
+   desc:"Incarichi legati ai gioielli.",
+   ms:["Missioni di Yasmani"]},
+  {id:"randy", who:"Randy", ch:"Cap. 3", p:"Jason e Lucia", trofeo:null,
+   desc:"Consegne di auto sportive, a partire dalla missione della storia «Steal the Zorrusso for Randy».",
+   ms:["Consegne di auto sportive"]},
+  {id:"rapine", who:"Rapine minori", ch:"Cap. 3", p:"Jason e Lucia", trofeo:null,
+   desc:"Colpi ai bancomat e ai negozi di prestiti su paga: soldi veloci a Vice City.",
+   ms:["Rapina a un bancomat","Rapina a un negozio di prestiti"]},
+  {id:"andy", who:"Andy", ch:"Cap. 3", p:"Solo Lucia", trofeo:false,
+   desc:"Il filone Cellerica.",
+   ms:["Missioni di Andy (Cellerica)","Missione finale di Andy"], reward:"Trofeo «Road to Rehabilitation»"},
+  {id:"tyrone", who:"Tyrone", ch:"Cap. 3", p:"Solo Jason", trofeo:false,
+   desc:"Gli incarichi Kitty Litter, a partire da «Take Out Kitty Litter».",
+   ms:["Take Out Kitty Litter","Missione finale di Tyrone"], reward:"Trofeo «Spin On This!»"},
+  {id:"pete", who:"Pilot Pete", ch:"Cap. 4", p:"Jason e Lucia", trofeo:true,
+   desc:"Consegne in volo: lancia i pacchi e atterra sulla pista a sud di Port Gellhorn.",
+   ms:["Lanci aerei per Pete","The Last Mile: Backseat Pilot"], reward:"12.000 $ via BuckMe per i lanci · 20.000 $ per «The Last Mile» se arrivi in tempo"},
+  {id:"eddie", who:"Eddie Acosta", ch:"Cap. 4", p:"Jason e Lucia", trofeo:false,
+   desc:"Un invito a una festa.",
+   ms:["L'invito di Eddie Acosta"]}
+];
+SIDE.forEach(sd=>{ sd.mids = sd.ms.map((_,i)=>`sf-${sd.id}-${i}`); });
 
 const ACTIVITIES = [
   ["Immersioni e caccia al tesoro","Con Kenton, nelle Keys. Bombole e metal detector sono sulla barca di Jason."],
@@ -704,7 +871,7 @@ document.addEventListener("change", e=>{
 /* ============================================================
    ROUTING
    ============================================================ */
-const VIEWS = ["home","mappa","guida","trucchi","segreti","raccolta"];
+const VIEWS = ["home","mappa","missioni","guida","trucchi","segreti","raccolta"];
 function route(){
   const h = (location.hash||"").slice(1);
   const v = VIEWS.includes(h) ? h : "home";
@@ -723,7 +890,9 @@ function renderHomeProgress(){
     ["Relitti di Kenton", PLACES.filter(p=>p.cat==="relitto")],
     ["Luoghi segreti", PLACES.filter(p=>p.cat==="segreto")],
     ["Armi uniche", PLACES.filter(p=>p.cat==="arma")],
-    ["Easter egg", EGGS]
+    ["Easter egg", EGGS],
+    ["Missioni principali", MAIN_REQ],
+    ["Missioni secondarie", SIDE.flatMap(sd=>sd.mids.map(id=>({id})))]
   ];
   let html = groups.map(([name, arr])=>{
     const n = arr.filter(x=>S.found[x.id]).length, t=arr.length;
@@ -973,7 +1142,7 @@ function openPinForm(x,y){
    ============================================================ */
 function tabs(rootSel, key, renderers, bodySel){
   const root=$(rootSel);
-  const cur = S.tab[key] || root.querySelector("button").dataset.t;
+  let cur = S.tab[key]; if(!renderers[cur]) cur = root.querySelector("button").dataset.t;
   root.querySelectorAll("button").forEach(b=>b.setAttribute("aria-selected", b.dataset.t===cur));
   $(bodySel).innerHTML = renderers[cur]();
   root.onclick = e=>{ const b=e.target.closest("button[data-t]"); if(!b) return; S.tab[key]=b.dataset.t; save(); tabs(rootSel,key,renderers,bodySel); };
@@ -984,22 +1153,10 @@ const GUIDE = {
   soldi: ()=>`<div style="display:flex;flex-direction:column;gap:12px">
     <p class="note">I compensi indicati vengono dalle guide della community e possono variare.</p>
     <div class="grid">${TIPS_MONEY.map(t=>`<div class="card"><div class="row"><span class="pill hot">${esc(t[2])}</span></div><h3>${esc(t[0])}</h3><p>${esc(t[1])}</p></div>`).join("")}</div></div>`,
-  storia: ()=>`<div class="${S.spoilers?"spoilers-on":""}" id="storyWrap" style="display:flex;flex-direction:column;gap:10px">
-    <div class="panel" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:space-between">
-      <p style="font-size:.88rem;color:var(--muted);flex:1;min-width:200px">5 capitoli e 91 missioni principali, giocate come Jason e Lucia. Le descrizioni sono sfocate per evitare spoiler.</p>
-      <button class="btn small" id="spoilBtn">${S.spoilers?"Nascondi spoiler":"Mostra spoiler"}</button>
-    </div>
-    ${CHAPTERS.map(c=>`<details class="chapter"${c.n===1?" open":""}><summary><span class="cn">${c.n}</span><span class="ct"><b>${esc(c.t)}</b><small>${esc(c.tag)}${c.count?" · "+esc(c.count):""}</small></span><span class="pill">capitolo</span></summary>
-      <div class="cb"><p class="spoiler">${esc(c.body)}</p>${c.missions.length?`<div><span class="eyebrow" style="color:var(--muted)">Missioni citate</span><div class="mission-list" style="margin-top:6px">${c.missions.map(m=>`<span class="spoiler">${esc(m)}</span>`).join("")}</div></div>`:""}</div></details>`).join("")}
-    <p class="note">Le fonti non concordano sul numero di missioni per capitolo: le cifre sono indicative.</p></div>`,
-  regioni: ()=>`<div class="grid">${REGIONS.map(r=>`<div class="card region-card"><span class="sw" style="background:${r.color}"></span>
-      <span class="eyebrow" style="color:${r.color}">${esc(r.county)}</span><h3>${esc(r.name)}</h3><p>${esc(r.desc)}</p>
-      <dl class="kv"><dt>Ispirata a</dt><dd>${esc(r.ispirazione)}</dd></dl>
-      <div class="row"><button class="btn small" data-region="${r.id}">Vedi sulla mappa</button></div></div>`).join("")}</div>`,
   attivita: ()=>`<div class="grid">${ACTIVITIES.map(a=>`<div class="card"><h3>${esc(a[0])}</h3><p>${esc(a[1])}</p></div>`).join("")}</div>`
 };
 document.addEventListener("click", e=>{
-  if(e.target.id==="spoilBtn"){ S.spoilers=!S.spoilers; save(); renderGuide(); }
+  if(e.target.id==="spoilBtn"){ S.spoilers=!S.spoilers; save(); renderMissions(); }
   if(e.target.closest(".spoiler") && !S.spoilers){ e.preventDefault(); e.target.closest(".spoiler").style.filter="none"; }
   const rb = e.target.closest("[data-region]");
   if(rb){ const r=REGIONS.find(x=>x.id===rb.dataset.region); location.hash="mappa"; setTimeout(()=>{ T.k=2.4; T.x=VBW/2-r.x*T.k; T.y=VBH/2-r.y*T.k; clampT(); applyT(); },40); }
@@ -1107,7 +1264,7 @@ document.addEventListener("pointerdown", e=>{
 document.addEventListener("click", e=>{
   if(e.target.id==="resetAll") $("#resetConfirm").hidden=false;
   if(e.target.id==="resetNo") $("#resetConfirm").hidden=true;
-  if(e.target.id==="resetYes"){ S.found={}; S.counts={}; S.pins=[]; save(); renderAll(); toast("Progressi azzerati"); }
+  if(e.target.id==="resetYes"){ S.found={}; S.counts={}; S.pins=[]; S.revealed={}; save(); renderAll(); toast("Progressi azzerati"); }
 });
 
 /* ============================================================
@@ -1124,7 +1281,12 @@ function buildIndex(){
   TIPS_START.forEach(t=>idx.push({t:t[0], s:"Primi passi", b:t[1], cat:"Guida", go:()=>{S.tab.guida="inizio"; renderGuide(); location.hash="guida";}}));
   TIPS_MONEY.forEach(t=>idx.push({t:t[0], s:"Soldi · "+t[2], b:t[1], cat:"Guida", go:()=>{S.tab.guida="soldi"; renderGuide(); location.hash="guida";}}));
   ACTIVITIES.forEach(t=>idx.push({t:t[0], s:"Attività", b:t[1], cat:"Guida", go:()=>{S.tab.guida="attivita"; renderGuide(); location.hash="guida";}}));
-  CHAPTERS.forEach(c=>idx.push({t:`Capitolo ${c.n}: ${c.t}`, s:c.tag, b:c.missions.join(" "), cat:"Storia", go:()=>{S.tab.guida="storia"; renderGuide(); location.hash="guida";}}));
+  const goMiss = (tab,id)=>()=>{ S.tab.missioni=tab; if(id) S.revealed[id]=true; renderMissions(); location.hash="missioni"; if(id) setTimeout(()=>{ const el=document.getElementById(id); if(el){ el.scrollIntoView({block:"center"}); el.closest("details") && (el.closest("details").open=true); } },60); };
+  CHAPTERS.forEach(c=>{
+    idx.push({t:`Capitolo ${c.n}: ${c.t}`, s:c.tag+` · ${c.missions.length} missioni`, b:c.body, cat:"Storia", go:goMiss("storia")});
+    c.missions.forEach(m=>idx.push({t:m.n, s:`Missione · Capitolo ${c.n}`, b:m.tip||"", cat:"Missioni", go:goMiss("storia","row-"+m.id)}));
+  });
+  SIDE.forEach(sd=>idx.push({t:sd.who, s:`Strangers & Freaks · ${sd.ch}`, b:sd.desc+" "+sd.ms.join(" ")+" "+(sd.reward||""), cat:"Missioni secondarie", go:goMiss("secondarie","sf-"+sd.id)}));
   return idx;
 }
 const norm = s => String(s||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
@@ -1148,7 +1310,80 @@ $("#results").addEventListener("click", e=>{ const b=e.target.closest("[data-hit
 /* ============================================================
    AVVIO
    ============================================================ */
-function renderAll(){ renderHomeProgress(); renderFilters(); renderMarkers(); renderGuide(); renderCheats(); renderSecrets(); renderColl(); }
+/* ============================================================
+   MISSIONI
+   ============================================================ */
+if(!S.revealed) S.revealed={};
+const WHO = {J:"JASON", L:"LUCIA", JL:"J + L"};
+function missionVisible(gi, m){
+  if(S.spoilers || S.revealed[m.id] || S.found[m.id]) return true;
+  let last=-1; MAIN_ALL.forEach((x,i)=>{ if(S.found[x.id]) last=i; });
+  return gi <= last+2;
+}
+const MISS = {
+  storia: ()=>{
+    let gi=0;
+    const done = MAIN_REQ.filter(m=>S.found[m.id]).length;
+    return `<div style="display:flex;flex-direction:column;gap:12px">
+    <div class="panel" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:space-between">
+      <div style="flex:1;min-width:200px;display:flex;flex-direction:column;gap:6px">
+        <div class="prow"><span><b>${done}</b> di ${MAIN_REQ.length} missioni principali</span><span class="mono">${Math.round(done/MAIN_REQ.length*100)}%</span><div class="bar"><i style="width:${done/MAIN_REQ.length*100}%"></i></div></div>
+      </div>
+      <button class="btn small" id="spoilBtn">${S.spoilers?"Nascondi i titoli futuri":"Mostra tutti i titoli"}</button>
+    </div>
+    ${CHAPTERS.map(c=>{
+      const req=c.missions.filter(m=>!(m.f||[]).includes("opz")), cd=req.filter(m=>S.found[m.id]).length;
+      const open = c.missions.some(m=>!S.found[m.id]) && (c.n===1 || CHAPTERS[c.n-2].missions.filter(m=>!(m.f||[]).includes("opz")).every(m=>S.found[m.id]));
+      return `<details class="chapter"${open?" open":""}><summary><span class="cn">${c.n}</span><span class="ct"><b>${esc(c.t)}</b><small>${esc(c.tag)} · ${req.length} principali${c.missions.length>req.length?` + ${c.missions.length-req.length} opzionali`:""}</small></span>
+        <span class="ch-prog"><span class="bar"><i style="width:${cd/req.length*100}%"></i></span>${cd}/${req.length}</span></summary>
+        <div class="cb"><p>${esc(c.body)}</p>
+        <ol class="ms-list">${c.missions.map((m,i)=>{
+          const vis = missionVisible(gi++, m), f=m.f||[];
+          const badges = (m.p?`<span class="who">${WHO[m.p]}</span>`:"")+(f.includes("opz")?'<span class="pill">opzionale</span>':"")+(f.includes("pnr")?'<span class="pill hot">non ritorno</span>':"")+(f.includes("manc")?'<span class="pill warn">mancabile</span>':"");
+          return `<li class="ms${S.found[m.id]?" done":""}" id="row-${m.id}">
+            <span class="num">${String(i+1).padStart(2,"0")}</span>
+            <div style="min-width:0">${vis
+              ? `<div class="nm"><span>${esc(m.n)}</span>${badges}</div>${m.tip?`<p class="tip">${esc(m.tip)}</p>`:""}`
+              : `<div class="nm veil" data-reveal="${m.id}" title="Tocca per svelare"><span>${esc(m.n)}</span></div>${m.tip?`<p class="tip veil" data-reveal="${m.id}">${esc(m.tip)}</p>`:""}`}</div>
+            <label class="check" aria-label="Completata: ${esc(m.n)}"><input type="checkbox" data-found="${m.id}" data-miss ${S.found[m.id]?"checked":""}></label>
+          </li>`;}).join("")}</ol></div></details>`;}).join("")}
+    <p class="note">Elenco ricostruito dalle guide della community: il conteggio ufficiale è di 91 missioni principali, ma alcune fonti ne contano fino a 93 includendo le opzionali, e l'ordine di metà Capitolo 4 varia leggermente.</p></div>`;
+  },
+  secondarie: ()=>{
+    const all=SIDE.flatMap(sd=>sd.mids), d=all.filter(id=>S.found[id]).length;
+    return `<div style="display:flex;flex-direction:column;gap:12px">
+    <div class="panel" style="display:flex;flex-direction:column;gap:8px">
+      <div class="prow"><span><b>${d}</b> di ${all.length} incarichi secondari</span><span class="mono">${Math.round(d/all.length*100)}%</span><div class="bar"><i style="width:${d/all.length*100}%"></i></div></div>
+      <p style="font-size:.86rem;color:var(--muted)">Il trofeo Strangers &amp; Freaks richiede di completare 8 filoni, ma il gioco non dice quali contano. Non c'è una scheda dedicata nel menu: cerca sulla mappa l'icona rosa a forma di libro.</p>
+    </div>
+    <div class="grid">${SIDE.map(sd=>`<div class="card" id="sf-${sd.id}">
+      <div class="row"><span class="pill">${esc(sd.ch)}</span><span class="pill">${esc(sd.p)}</span>${sd.trofeo===true?'<span class="pill ok">vale per il trofeo</span>':sd.trofeo===false?'<span class="pill">non vale per il trofeo</span>':""}${sd.manc?'<span class="pill warn">mancabile</span>':""}</div>
+      <h3>${esc(sd.who)}</h3><p>${esc(sd.desc)}</p>
+      ${sd.nota?`<p style="color:var(--warn)">${esc(sd.nota)}</p>`:""}
+      ${sd.reward?`<p><b style="color:var(--sand)">Ricompensa:</b> ${esc(sd.reward)}</p>`:""}
+      <ul class="sf-ms">${sd.ms.map((m,i)=>`<li>${checkbox(sd.mids[i], esc(m))}</li>`).join("")}</ul>
+    </div>`).join("")}</div>
+    <p class="note">Le guide non sono ancora d'accordo su quali filoni valgano per il trofeo: Kirk, Kyle, Yago e Pilot Pete sono confermati, per gli altri controlla in gioco.</p></div>`;
+  },
+  consigli: ()=>`<div style="display:flex;flex-direction:column;gap:12px">
+    <div class="warnbox"><b>Niente replay delle missioni.</b> Le scelte della storia sono definitive e il gioco ha più finali. Salva a mano prima dell'ultima missione del Capitolo 4 e prima del finale.</div>
+    <ol class="tips">
+      <li><span class="n">01</span><div><b>Prima di «Tourist Trap» (Capitolo 1)</b><p>Completa le commissioni di Shirley (il rum e lo scooter), la meditazione sul balcone con Lucia a casa di Jason, e raccogli riviste e libri in casa. Deposita i contanti nei Family Savings: sono permanenti e non si possono prelevare, ma il resto lo perdi.</p></div></li>
+      <li><span class="n">02</span><div><b>Durante «Don Gone»</b><p>Il revolver H&amp;L .38 di Donnie si prende solo dal bagagliaio della sua auto in questa missione.</p></div></li>
+      <li><span class="n">03</span><div><b>Dopo «Swamped»</b><p>Il punto di consegna di Donnie può chiudere: vendi i narcotici prima di completarla.</p></div></li>
+      <li><span class="n">04</span><div><b>Tre missioni senza free roam</b><p>«Tourist Trap», «Home Sweet Home» e «Discharge Time» si giocano una dopo l'altra e portano dritte al Capitolo 2.</p></div></li>
+      <li><span class="n">05</span><div><b>Prima di «Checking Out» (Capitolo 2)</b><p>Servono tutte le altre missioni del capitolo e almeno 15.000 $. Salva a mano e vendi il bottino a Dunk: alcuni ricettatori spariscono andando avanti.</p></div></li>
+      <li><span class="n">06</span><div><b>«Race Against Yago»</b><p>È a tempo: se la lasci scadere la perdi.</p></div></li>
+      <li><span class="n">07</span><div><b>Il trofeo che puoi perdere</b><p>Secondo le guide nulla di ciò che serve per il 100% è mancabile, ma un trofeo è a rischio: probabilmente «Positive Mental Attitude», legato al primo punto di meditazione a casa di Jason.</p></div></li>
+    </ol></div>`
+};
+function renderMissions(){ tabs("#missTabs","missioni",MISS,"#missBody"); }
+document.addEventListener("click", e=>{
+  const r=e.target.closest("[data-reveal]"); if(r){ S.revealed[r.dataset.reveal]=true; save(); renderMissions(); }
+});
+document.addEventListener("change", e=>{ if(e.target.matches("[data-found]") && location.hash==="#missioni") setTimeout(()=>{ const y=scrollY; renderMissions(); scrollTo(0,y); },0); });
+
+function renderAll(){ renderHomeProgress(); renderMissions(); renderFilters(); renderMarkers(); renderGuide(); renderCheats(); renderSecrets(); renderColl(); }
 drawBase(); renderAll(); route();
 
 if("serviceWorker" in navigator && /^https?:$/.test(location.protocol) && !/claude/.test(location.hostname)){
