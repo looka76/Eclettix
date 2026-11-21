@@ -1,0 +1,1147 @@
+<title>Atlante di Leonida</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Leonida">
+<meta name="theme-color" content="#140f24">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Layout: app a schede — barra in basso su iPhone, rail laterale su iPad; la mappa è il pezzo forte.
+   Look volutamente unico e notturno: tramonto di Vice City su acqua turchese. */
+:root{
+  --night:#140f24;      /* fondo */
+  --night-2:#1d1633;    /* superfici */
+  --night-3:#2a2147;    /* superfici rialzate */
+  --line:#3a2f5e;       /* bordi */
+  --sand:#f6ede4;       /* testo */
+  --muted:#b5a9cc;      /* testo secondario */
+  --pink:#ff4f8b;       /* accento tramonto */
+  --orange:#ffa24a;     /* accento caldo */
+  --teal:#3ee6cf;       /* acqua */
+  --sea:#123a52;        /* mare sulla mappa */
+  --sea-2:#0d2c40;
+  --land:#2b3d3a;       /* terra sulla mappa */
+  --ok:#5fe39a; --warn:#ffcf5a;
+  --f-display:"Unbounded","Arial Black",system-ui,sans-serif;
+  --f-body:"Manrope",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,monospace;
+  --nav-h:64px; --hdr-h:56px;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--night);color:var(--sand);font-family:var(--f-body);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;overscroll-behavior-y:none}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:40;background:var(--night)}
+a{color:var(--teal)}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--teal);outline-offset:2px;border-radius:6px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;letter-spacing:-.01em}
+h2{font-size:1.35rem;font-weight:700}
+h3{font-size:1rem;font-weight:700}
+p{margin:0}
+.mono{font-family:var(--f-mono)}
+.eyebrow{font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--orange);font-weight:700}
+
+/* ---------- header ---------- */
+.hdr{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;height:var(--hdr-h);display:flex;align-items:center;gap:12px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  background:color-mix(in srgb,var(--night) 88%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:10px;min-width:0;flex:1;text-decoration:none;color:inherit}
+.brand-mark{width:32px;height:32px;flex:none;border-radius:9px;background:linear-gradient(160deg,var(--orange),var(--pink) 55%,#7b3bff);display:grid;place-items:center;font-family:var(--f-display);font-weight:800;font-size:.8rem;color:var(--night)}
+.brand-txt{min-width:0}
+.brand-txt b{display:block;font-family:var(--f-display);font-size:.92rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand-txt span{display:block;font-size:.7rem;color:var(--muted);white-space:nowrap}
+.icon-btn{width:40px;height:40px;border-radius:12px;border:1px solid var(--line);background:var(--night-2);display:grid;place-items:center;cursor:pointer;flex:none}
+.icon-btn svg{width:20px;height:20px}
+
+/* ---------- shell ---------- */
+.shell{display:block}
+main{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:18px calc(var(--nav-h) + 28px + env(safe-area-inset-bottom,0px))}
+.view{max-width:1100px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+.view[hidden]{display:none!important}
+
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:30;display:grid;grid-template-columns:repeat(6,1fr);
+  padding-left:max(6px,env(safe-area-inset-left,0px));padding-right:max(6px,env(safe-area-inset-right,0px));padding-bottom:env(safe-area-inset-bottom,0px);
+  background:color-mix(in srgb,var(--night) 92%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--line)}
+.nav a{height:var(--nav-h);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;text-decoration:none;color:var(--muted);font-size:.66rem;font-weight:600}
+.nav a svg{width:22px;height:22px}
+.nav a[aria-current="page"]{color:var(--sand)}
+.nav a[aria-current="page"] svg{color:var(--pink)}
+
+@media (min-width:820px){
+  .shell{display:grid;grid-template-columns:200px 1fr}
+  .nav{position:sticky;top:calc(var(--hdr-h) + env(safe-area-inset-top,0px));height:calc(100dvh - var(--hdr-h) - env(safe-area-inset-top,0px));align-self:start;
+    display:flex;flex-direction:column;gap:4px;padding:16px 12px;padding-left:max(12px,env(safe-area-inset-left,0px));border-top:0;border-right:1px solid var(--line);background:transparent}
+  .nav a{height:auto;flex-direction:row;justify-content:flex-start;gap:12px;padding:11px 12px;border-radius:12px;font-size:.92rem}
+  .nav a[aria-current="page"]{background:var(--night-2)}
+  main{padding-block:24px 40px;padding-left:24px}
+}
+
+/* ---------- comuni ---------- */
+.sec-head{display:flex;align-items:end;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.sec-head p{color:var(--muted);font-size:.9rem;max-width:60ch}
+.panel{background:var(--night-2);border:1px solid var(--line);border-radius:16px;padding:16px}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr))}
+.card{background:var(--night-2);border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.card p{color:var(--muted);font-size:.9rem}
+.card .row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;gap:5px;font-size:.68rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:3px 8px;border-radius:999px;border:1px solid var(--line);color:var(--muted);white-space:nowrap}
+.pill.ok{color:var(--ok);border-color:color-mix(in srgb,var(--ok) 45%,transparent)}
+.pill.warn{color:var(--warn);border-color:color-mix(in srgb,var(--warn) 45%,transparent)}
+.pill.hot{color:var(--pink);border-color:color-mix(in srgb,var(--pink) 45%,transparent)}
+.pill.sea{color:var(--teal);border-color:color-mix(in srgb,var(--teal) 45%,transparent)}
+.chips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;-webkit-overflow-scrolling:touch}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;display:inline-flex;align-items:center;gap:7px;height:36px;padding:0 13px;border-radius:999px;border:1px solid var(--line);background:var(--night-2);font-size:.82rem;font-weight:600;cursor:pointer;color:var(--muted)}
+.chip[aria-pressed="true"]{background:var(--sand);color:var(--night);border-color:var(--sand)}
+.chip .dot{width:9px;height:9px;border-radius:50%;box-shadow:0 0 0 1.5px rgba(20,15,36,.6)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:40px;padding:0 16px;border-radius:12px;border:1px solid var(--line);background:var(--night-3);font-weight:700;font-size:.85rem;cursor:pointer;text-decoration:none;color:var(--sand)}
+.btn.primary{background:var(--pink);border-color:var(--pink);color:#1a0b14}
+.btn.small{height:32px;padding:0 11px;font-size:.78rem;border-radius:10px}
+.check{display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-size:.82rem;font-weight:600;color:var(--muted);user-select:none}
+.check input{appearance:none;-webkit-appearance:none;width:22px;height:22px;border-radius:7px;border:1.5px solid var(--line);background:var(--night);display:grid;place-items:center;margin:0;cursor:pointer}
+.check input:checked{background:var(--teal);border-color:var(--teal)}
+.check input:checked::after{content:"";width:6px;height:11px;border:solid var(--night);border-width:0 2.5px 2.5px 0;transform:translate(0,-1px) rotate(45deg)}
+.check input:checked + span{color:var(--teal)}
+.note{font-size:.8rem;color:var(--muted);border-left:3px solid var(--orange);padding:4px 0 4px 12px}
+
+/* ---------- home ---------- */
+.hero{position:relative;border-radius:22px;overflow:hidden;padding:26px 20px 22px;border:1px solid var(--line);
+  background:radial-gradient(120% 90% at 85% 0%,color-mix(in srgb,var(--orange) 55%,transparent),transparent 55%),
+             radial-gradient(90% 80% at 10% 10%,color-mix(in srgb,var(--pink) 50%,transparent),transparent 60%),
+             linear-gradient(180deg,#3a1d4f 0%,#1a1530 70%)}
+.hero::after{content:"";position:absolute;left:-10%;right:-10%;bottom:-40px;height:120px;background:repeating-linear-gradient(0deg,color-mix(in srgb,var(--teal) 30%,transparent) 0 2px,transparent 2px 9px);mask:linear-gradient(transparent,#000);-webkit-mask:linear-gradient(transparent,#000);opacity:.6;pointer-events:none}
+.hero-in{position:relative;z-index:1;display:flex;flex-direction:column;gap:12px;max-width:640px}
+.hero h1{font-size:clamp(1.9rem,7vw,3.2rem);font-weight:800;line-height:1.02}
+.hero h1 em{font-style:normal;background:linear-gradient(90deg,var(--orange),var(--pink));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:color-mix(in srgb,var(--sand) 85%,transparent);max-width:52ch}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media (min-width:640px){.stats{grid-template-columns:repeat(6,1fr)}}
+.stat{background:var(--night-2);border:1px solid var(--line);border-radius:14px;padding:12px}
+.stat b{display:block;font-family:var(--f-display);font-size:1.35rem;font-variant-numeric:tabular-nums}
+.stat span{font-size:.72rem;color:var(--muted);line-height:1.25;display:block}
+.quick{display:grid;gap:10px;grid-template-columns:repeat(2,1fr)}
+@media (min-width:640px){.quick{grid-template-columns:repeat(4,1fr)}}
+.quick a{display:flex;flex-direction:column;gap:6px;padding:14px;border-radius:16px;background:var(--night-2);border:1px solid var(--line);text-decoration:none;color:var(--sand);min-height:96px}
+.quick a b{font-family:var(--f-display);font-size:.88rem}
+.quick a span{font-size:.78rem;color:var(--muted)}
+.quick a i{font-style:normal;width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font-weight:800;font-size:.85rem;color:var(--night)}
+.progress{display:flex;flex-direction:column;gap:10px}
+.bar{height:8px;border-radius:99px;background:var(--night);overflow:hidden;border:1px solid var(--line)}
+.bar>i{display:block;height:100%;background:linear-gradient(90deg,var(--teal),var(--ok));border-radius:99px}
+.prow{display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:center;font-size:.85rem}
+.prow .bar{grid-column:1/-1}
+
+/* ---------- mappa ---------- */
+.map-wrap{display:grid;gap:12px}
+.map-box{position:relative;height:min(72dvh,760px);min-height:420px;border-radius:18px;overflow:hidden;border:1px solid var(--line);background:var(--sea-2)}
+.map-box svg{width:100%;height:100%;display:block;touch-action:none;cursor:grab;user-select:none;-webkit-user-select:none}
+.map-box svg.adding{cursor:crosshair}
+.map-tools{position:absolute;right:10px;top:10px;display:flex;flex-direction:column;gap:8px;z-index:2}
+.map-tools .icon-btn{background:color-mix(in srgb,var(--night) 85%,transparent);backdrop-filter:blur(6px)}
+.map-tools .icon-btn[aria-pressed="true"]{background:var(--pink);border-color:var(--pink);color:#1a0b14}
+.map-hint{position:absolute;left:10px;bottom:10px;z-index:2;font-size:.72rem;color:var(--muted);background:color-mix(in srgb,var(--night) 80%,transparent);padding:5px 9px;border-radius:9px;max-width:calc(100% - 80px)}
+.map-hint.on{color:var(--night);background:var(--pink);font-weight:700}
+.mk{cursor:pointer;transform:scale(var(--inv,1))}
+.mk .halo{opacity:0;transition:opacity .2s}
+.mk.sel .halo{opacity:1}
+.mk.found .core{opacity:.45}
+.map-lbl{font-family:var(--f-display);font-weight:700;fill:var(--sand);paint-order:stroke;stroke:#0b1a22;stroke-width:5px;stroke-linejoin:round;pointer-events:none;letter-spacing:.06em}
+.map-sub{font-family:var(--f-body);font-weight:700;fill:var(--muted);paint-order:stroke;stroke:#0b1a22;stroke-width:4px;pointer-events:none}
+.legend-list{display:flex;flex-direction:column;gap:6px;max-height:380px;overflow:auto}
+.li-btn{display:flex;align-items:center;gap:10px;width:100%;text-align:left;padding:9px 10px;border-radius:12px;border:1px solid transparent;background:none;cursor:pointer}
+.li-btn:hover,.li-btn.sel{background:var(--night-3);border-color:var(--line)}
+.li-btn .dot{width:12px;height:12px;border-radius:50%;flex:none}
+.li-btn b{font-size:.86rem;display:block}
+.li-btn small{color:var(--muted);font-size:.74rem;display:block}
+@media (min-width:1080px){.map-wrap{grid-template-columns:1fr 300px;align-items:start}.map-box{height:calc(100dvh - var(--hdr-h) - 150px)}}
+
+/* ---------- sheet ---------- */
+.scrim{position:fixed;inset:0;z-index:50;background:rgba(5,3,12,.55)}
+.sheet{position:fixed;z-index:51;left:0;right:0;bottom:0;max-height:78dvh;overflow:auto;background:var(--night-2);border:1px solid var(--line);border-bottom:0;border-radius:22px 22px 0 0;
+  padding:10px max(18px,env(safe-area-inset-right,0px)) calc(22px + env(safe-area-inset-bottom,0px)) max(18px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;gap:12px;animation:up .22s ease-out}
+.sheet .grab{width:42px;height:5px;border-radius:9px;background:var(--line);margin:0 auto 4px}
+.sheet p{color:color-mix(in srgb,var(--sand) 82%,transparent)}
+.sheet .acts{display:flex;gap:8px;flex-wrap:wrap}
+.sheet input[type=text],.sheet textarea,.field{width:100%;background:var(--night);border:1px solid var(--line);border-radius:12px;padding:11px 12px;color:var(--sand);font:inherit;font-size:16px}
+@media (min-width:820px){.sheet{left:auto;right:24px;bottom:24px;width:400px;border-radius:20px;border-bottom:1px solid var(--line);padding:18px}.sheet .grab{display:none}}
+@keyframes up{from{transform:translateY(24px);opacity:0}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){.sheet{animation:none}}
+
+/* ---------- trucchi ---------- */
+.howto{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr))}
+.howto .panel b{font-family:var(--f-display);font-size:.85rem;display:block;margin-bottom:4px}
+.howto .panel p{font-size:.86rem;color:var(--muted)}
+.cheat .seq{display:flex;flex-wrap:wrap;gap:5px}
+.key{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;background:var(--night);border:1px solid var(--line);font-family:var(--f-mono);font-weight:700;font-size:1rem;color:var(--teal)}
+.cheat h3{font-size:.98rem}
+.cheat .unlock{font-size:.84rem;color:var(--muted)}
+.cheat .unlock b{color:var(--sand);font-weight:700}
+.cheat .nocode{font-family:var(--f-mono);font-size:.8rem;color:var(--muted);padding:6px 0}
+
+/* ---------- guida ---------- */
+.tabs{display:flex;gap:6px;background:var(--night-2);border:1px solid var(--line);border-radius:14px;padding:4px;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tabs button{flex:1 0 auto;height:36px;padding:0 14px;border:0;border-radius:10px;background:none;font-weight:700;font-size:.82rem;color:var(--muted);cursor:pointer;white-space:nowrap}
+.tabs button[aria-selected="true"]{background:var(--night-3);color:var(--sand)}
+.tips{display:flex;flex-direction:column;gap:10px;margin:0;padding:0;list-style:none}
+.tips li{display:grid;grid-template-columns:30px 1fr;gap:12px;align-items:start;background:var(--night-2);border:1px solid var(--line);border-radius:14px;padding:13px}
+.tips li .n{width:30px;height:30px;border-radius:9px;background:var(--night-3);display:grid;place-items:center;font-family:var(--f-mono);font-size:.8rem;color:var(--orange);font-weight:700}
+.tips li b{display:block;font-size:.93rem}
+.tips li p{font-size:.87rem;color:var(--muted)}
+.chapter{border-radius:16px;border:1px solid var(--line);background:var(--night-2);overflow:hidden}
+.chapter summary{list-style:none;cursor:pointer;padding:15px 16px;display:flex;align-items:center;gap:12px}
+.chapter summary::-webkit-details-marker{display:none}
+.chapter .cn{font-family:var(--f-display);font-weight:800;font-size:1.4rem;color:var(--pink);width:34px;flex:none}
+.chapter .ct{flex:1;min-width:0}
+.chapter .ct b{display:block;font-family:var(--f-display);font-size:.92rem}
+.chapter .ct small{color:var(--muted);font-size:.78rem}
+.chapter .cb{padding:0 16px 16px;display:flex;flex-direction:column;gap:10px;font-size:.9rem;color:color-mix(in srgb,var(--sand) 84%,transparent)}
+.spoiler{filter:blur(6px);transition:filter .2s;cursor:pointer}
+.spoilers-on .spoiler{filter:none;cursor:auto}
+.mission-list{display:flex;flex-wrap:wrap;gap:6px}
+.mission-list span{font-family:var(--f-mono);font-size:.76rem;padding:4px 8px;border-radius:8px;background:var(--night);border:1px solid var(--line)}
+.region-card{position:relative;overflow:hidden}
+.region-card .sw{position:absolute;right:-30px;top:-30px;width:110px;height:110px;border-radius:50%;opacity:.25;pointer-events:none}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:3px 12px;font-size:.82rem}
+.kv dt{color:var(--muted)}
+.kv dd{margin:0}
+
+/* ---------- raccolta ---------- */
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:16px}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:.86rem}
+th,td{padding:11px 12px;text-align:left;border-bottom:1px solid var(--line);vertical-align:middle}
+th{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);background:var(--night-2)}
+tr:last-child td{border-bottom:0}
+td.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.stepper{display:inline-flex;align-items:center;gap:6px}
+.stepper button{width:30px;height:30px;border-radius:9px;border:1px solid var(--line);background:var(--night-3);cursor:pointer;font-weight:800}
+.stepper output{font-family:var(--f-mono);min-width:72px;text-align:center;font-size:.82rem}
+
+/* ---------- ricerca ---------- */
+.search{position:fixed;inset:0;z-index:60;background:color-mix(in srgb,var(--night) 96%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:flex;flex-direction:column;
+  padding:calc(env(safe-area-inset-top,0px) + 12px) max(16px,env(safe-area-inset-right,0px)) env(safe-area-inset-bottom,0px) max(16px,env(safe-area-inset-left,0px))}
+.search-top{display:flex;gap:10px;align-items:center;max-width:760px;width:100%;margin:0 auto}
+.search-top input{flex:1;min-width:0;height:46px;border-radius:14px;border:1px solid var(--line);background:var(--night-2);color:var(--sand);padding:0 14px;font:inherit;font-size:16px}
+.results{max-width:760px;width:100%;margin:14px auto 0;overflow:auto;display:flex;flex-direction:column;gap:6px;padding-bottom:20px}
+.res{display:block;text-align:left;width:100%;padding:12px;border-radius:12px;background:var(--night-2);border:1px solid var(--line);cursor:pointer}
+.res b{display:block;font-size:.9rem}
+.res small{color:var(--muted);font-size:.78rem}
+.res .eyebrow{font-size:.62rem}
+mark{background:color-mix(in srgb,var(--orange) 40%,transparent);color:inherit;border-radius:3px}
+.empty{color:var(--muted);text-align:center;padding:30px 10px;font-size:.9rem}
+.toast{position:fixed;left:50%;bottom:calc(var(--nav-h) + 18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:70;background:var(--sand);color:var(--night);font-weight:700;font-size:.85rem;padding:10px 16px;border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,.4)}
+footer.legal{font-size:.75rem;color:var(--muted);border-top:1px solid var(--line);padding-top:14px}
+</style>
+
+<header class="hdr">
+  <a class="brand" href="#home" aria-label="Atlante di Leonida, home">
+    <span class="brand-mark" aria-hidden="true">VI</span>
+    <span class="brand-txt"><b>Atlante di Leonida</b><span>Guida non ufficiale a GTA VI</span></span>
+  </a>
+  <button class="icon-btn" id="openSearch" aria-label="Cerca nella guida">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+  </button>
+</header>
+
+<div class="shell">
+<nav class="nav" aria-label="Sezioni">
+  <a href="#home" data-v="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 11 12 4l9 7v9h-6v-6H9v6H3z"/></svg>Home</a>
+  <a href="#mappa" data-v="mappa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="m3 6 6-2 6 2 6-2v14l-6 2-6-2-6 2z"/><path d="M9 4v14M15 6v14"/></svg>Mappa</a>
+  <a href="#guida" data-v="guida"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5M8 7h7"/></svg>Guida</a>
+  <a href="#trucchi" data-v="trucchi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="2" y="7" width="20" height="11" rx="5"/><path d="M7 10v5M4.5 12.5h5"/><circle cx="16" cy="11" r="1" fill="currentColor"/><circle cx="18" cy="14" r="1" fill="currentColor"/></svg>Trucchi</a>
+  <a href="#segreti" data-v="segreti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3c4 3 7 6 7 10a7 7 0 0 1-14 0c0-4 3-7 7-10z"/><circle cx="12" cy="13" r="2.5"/></svg>Segreti</a>
+  <a href="#raccolta" data-v="raccolta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><path d="m14 17.5 2 2 4-4.5"/></svg>Raccolta</a>
+</nav>
+
+<main id="main">
+
+<!-- ================= HOME ================= -->
+<section class="view" id="v-home" data-view="home">
+  <div class="hero">
+    <div class="hero-in">
+      <span class="eyebrow">Leonida · Vice City · Keys</span>
+      <h1>Tutta Leonida <em>in tasca</em>.</h1>
+      <p>Mappa interattiva, trucchi con le sequenze del D-pad, relitti di Kenton, segreti, armi uniche e checklist dei collezionabili. Tutto in italiano, da consultare mentre giochi.</p>
+      <div class="row" style="display:flex;gap:8px;flex-wrap:wrap">
+        <a class="btn primary" href="#mappa">Apri la mappa</a>
+        <a class="btn" href="#trucchi">Vedi i trucchi</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="stats" aria-label="Leonida in numeri">
+    <div class="stat"><b>6</b><span>regioni della mappa</span></div>
+    <div class="stat"><b>5</b><span>capitoli della storia</span></div>
+    <div class="stat"><b>91</b><span>missioni principali</span></div>
+    <div class="stat"><b>61</b><span>trucchi da sbloccare</span></div>
+    <div class="stat"><b>33</b><span>scoperte subacquee</span></div>
+    <div class="stat"><b>480</b><span>carte collezionabili</span></div>
+  </div>
+
+  <div class="quick">
+    <a href="#segreti"><i style="background:var(--teal)">⚓</i><b>Relitti di Kenton</b><span>7 siti d'immersione e i loro tesori</span></a>
+    <a href="#segreti"><i style="background:var(--pink)">?</i><b>Easter egg</b><span>Skunk Ape, UFO, il nido sulla torre</span></a>
+    <a href="#raccolta"><i style="background:var(--orange)">★</i><b>Armi uniche</b><span>Dove trovare le varianti rare</span></a>
+    <a href="#guida"><i style="background:var(--sand)">$</i><b>Fare soldi</b><span>I metodi migliori per capitolo</span></a>
+  </div>
+
+  <div class="panel progress">
+    <div class="sec-head"><h2>I tuoi progressi</h2><a class="btn small" href="#raccolta">Aggiorna</a></div>
+    <div id="homeProgress"></div>
+    <p class="note">I progressi restano salvati solo su questo dispositivo.</p>
+  </div>
+
+  <div class="panel" style="display:flex;flex-direction:column;gap:10px">
+    <h2>Installa sull'iPhone o sull'iPad</h2>
+    <ol class="tips">
+      <li><span class="n">1</span><div><b>Apri la pagina in Safari</b><p>L'installazione sulla schermata Home funziona da Safari su iOS e iPadOS.</p></div></li>
+      <li><span class="n">2</span><div><b>Tocca Condividi</b><p>È l'icona con il quadrato e la freccia verso l'alto, in basso su iPhone e in alto a destra su iPad.</p></div></li>
+      <li><span class="n">3</span><div><b>Scegli "Aggiungi alla schermata Home"</b><p>L'Atlante si apre a schermo intero come un'app, anche con la console accesa e il telefono sul divano.</p></div></li>
+    </ol>
+  </div>
+  <footer class="legal">Guida amatoriale e non ufficiale, non affiliata a Rockstar Games o Take-Two Interactive. "Grand Theft Auto" è un marchio dei rispettivi proprietari. La mappa è un'illustrazione originale e schematica: le posizioni sono indicative. Contenuti raccolti e tradotti da guide della community nei giorni successivi all'uscita (19 novembre 2026); dove le fonti non concordano trovi l'etichetta <span class="pill warn">da verificare</span>.</footer>
+</section>
+
+<!-- ================= MAPPA ================= -->
+<section class="view" id="v-mappa" data-view="mappa" hidden>
+  <div class="sec-head">
+    <div><span class="eyebrow">Mappa interattiva</span><h2>Lo Stato di Leonida</h2></div>
+    <p>Trascina per spostarti, pizzica o usa + e − per lo zoom. Tocca un segnaposto per i dettagli. Con il pulsante segnaposto aggiungi i tuoi punti.</p>
+  </div>
+  <div class="chips" id="mapFilters" role="group" aria-label="Filtra i segnaposti"></div>
+  <div class="map-wrap">
+    <div class="map-box">
+      <svg id="map" viewBox="0 0 1000 1300" preserveAspectRatio="xMidYMid meet" aria-label="Mappa schematica di Leonida">
+        <defs>
+          <radialGradient id="gSea" cx="60%" cy="40%" r="80%"><stop offset="0" stop-color="#164a66"/><stop offset="1" stop-color="#0b2536"/></radialGradient>
+          <linearGradient id="gLand" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2f4a3a"/><stop offset=".55" stop-color="#33473a"/><stop offset="1" stop-color="#2c4a44"/></linearGradient>
+          <pattern id="pSwamp" width="14" height="14" patternUnits="userSpaceOnUse"><path d="M2 9c2-2 4-2 6 0s4 2 6 0" stroke="#5aa58a" stroke-width="1.2" fill="none" opacity=".5"/></pattern>
+          <pattern id="pPine" width="22" height="22" patternUnits="userSpaceOnUse"><path d="M11 4l5 9h-10z" fill="#3f6b4a" opacity=".55"/></pattern>
+          <pattern id="pCity" width="12" height="12" patternUnits="userSpaceOnUse"><rect x="1" y="1" width="5" height="5" fill="#e9b7d0" opacity=".35"/><rect x="7" y="6" width="4" height="5" fill="#e9b7d0" opacity=".25"/></pattern>
+          <filter id="fShadow" x="-10%" y="-10%" width="120%" height="120%"><feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#000" flood-opacity=".45"/></filter>
+        </defs>
+        <rect x="-2000" y="-2000" width="5000" height="5300" fill="url(#gSea)"/>
+        <g id="vp">
+          <g id="mapBase"></g>
+          <g id="mapLabels"></g>
+          <g id="mapMarkers"></g>
+        </g>
+      </svg>
+      <div class="map-tools">
+        <button class="icon-btn" id="zIn" aria-label="Aumenta lo zoom"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+        <button class="icon-btn" id="zOut" aria-label="Riduci lo zoom"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14"/></svg></button>
+        <button class="icon-btn" id="zReset" aria-label="Mostra tutta la mappa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+        <button class="icon-btn" id="addPin" aria-pressed="false" aria-label="Aggiungi un tuo segnaposto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 21s-6-5.5-6-11a6 6 0 0 1 12 0c0 5.5-6 11-6 11z"/><path d="M12 7v6M9 10h6" stroke-linecap="round"/></svg></button>
+      </div>
+      <div class="map-hint" id="mapHint">Posizioni indicative · mappa schematica</div>
+    </div>
+    <aside class="panel" aria-label="Elenco dei luoghi">
+      <div class="sec-head" style="margin-bottom:8px"><h3>Luoghi visibili</h3><span class="pill" id="mapCount">0</span></div>
+      <div class="legend-list" id="mapList"></div>
+    </aside>
+  </div>
+</section>
+
+<!-- ================= GUIDA ================= -->
+<section class="view" id="v-guida" data-view="guida" hidden>
+  <div class="sec-head"><div><span class="eyebrow">Guida</span><h2>Come muoversi a Leonida</h2></div></div>
+  <div class="tabs" role="tablist" id="guideTabs">
+    <button role="tab" aria-selected="true" data-t="inizio">Primi passi</button>
+    <button role="tab" aria-selected="false" data-t="soldi">Soldi</button>
+    <button role="tab" aria-selected="false" data-t="storia">Storia</button>
+    <button role="tab" aria-selected="false" data-t="regioni">Regioni</button>
+    <button role="tab" aria-selected="false" data-t="attivita">Attività</button>
+  </div>
+  <div id="guideBody"></div>
+</section>
+
+<!-- ================= TRUCCHI ================= -->
+<section class="view" id="v-trucchi" data-view="trucchi" hidden>
+  <div class="sec-head">
+    <div><span class="eyebrow">Trucchi</span><h2>Codici e come sbloccarli</h2></div>
+    <p>In GTA VI i trucchi non sono disponibili da subito: ognuno si sblocca completando una sfida. I numeri di telefono che circolano online vengono da GTA V e qui non funzionano.</p>
+  </div>
+  <div class="howto">
+    <div class="panel"><b>1 · Sbloccalo</b><p>Completa l'obiettivo indicato su ogni scheda: medaglie al poligono, allenamenti, fughe dalla polizia, fine della storia.</p></div>
+    <div class="panel"><b>2 · Prendi il telefono</b><p>In free roam premi <span class="mono">↑</span> sul D-pad per tirare fuori il telefono.</p></div>
+    <div class="panel"><b>3 · Apri l'inserimento</b><p>Tieni premuti <span class="mono">L1 + R1</span> su PS5 oppure <span class="mono">LB + RB</span> su Xbox Series.</p></div>
+    <div class="panel"><b>4 · Digita la sequenza</b><p>Inserisci le direzioni del D-pad nell'ordine mostrato. Alcuni codici si possono ripetere.</p></div>
+  </div>
+  <div class="chips" id="cheatFilters" role="group" aria-label="Filtra i trucchi"></div>
+  <div class="grid" id="cheatGrid"></div>
+  <p class="note">Il gioco conta 61 trucchi in totale. La community ne ha documentati per ora solo una parte: le schede con l'etichetta "da verificare" hanno sequenze o requisiti riportati in modo diverso dalle varie fonti. GTA VI è uscito su PS5 e Xbox Series X|S; una versione PC non è ancora disponibile.</p>
+</section>
+
+<!-- ================= SEGRETI ================= -->
+<section class="view" id="v-segreti" data-view="segreti" hidden>
+  <div class="sec-head">
+    <div><span class="eyebrow">Segreti</span><h2>Relitti, misteri ed easter egg</h2></div>
+    <p>Spunta quello che hai già trovato: il segnaposto sulla mappa si attenua.</p>
+  </div>
+  <div class="tabs" role="tablist" id="secretTabs">
+    <button role="tab" aria-selected="true" data-t="relitti">Relitti di Kenton</button>
+    <button role="tab" aria-selected="false" data-t="luoghi">Luoghi segreti</button>
+    <button role="tab" aria-selected="false" data-t="egg">Easter egg</button>
+  </div>
+  <div id="secretBody"></div>
+</section>
+
+<!-- ================= RACCOLTA ================= -->
+<section class="view" id="v-raccolta" data-view="raccolta" hidden>
+  <div class="sec-head"><div><span class="eyebrow">Raccolta</span><h2>Collezionabili, armi e veicoli</h2></div></div>
+  <div class="tabs" role="tablist" id="collTabs">
+    <button role="tab" aria-selected="true" data-t="collez">Collezionabili</button>
+    <button role="tab" aria-selected="false" data-t="armi">Armi uniche</button>
+    <button role="tab" aria-selected="false" data-t="veicoli">Veicoli rari</button>
+    <button role="tab" aria-selected="false" data-t="fonti">Fonti</button>
+  </div>
+  <div id="collBody"></div>
+</section>
+
+</main>
+</div>
+
+<div class="scrim" id="scrim" hidden></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle" hidden></div>
+
+<div class="search" id="search" hidden role="dialog" aria-label="Ricerca">
+  <div class="search-top">
+    <input id="q" type="search" placeholder="Cerca: relitto, Ammu-Nation, soldi, UFO…" autocomplete="off" enterkeyhint="search">
+    <button class="btn" id="closeSearch">Chiudi</button>
+  </div>
+  <div class="results" id="results"></div>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+(function(){
+"use strict";
+
+/* ============================================================
+   DATI — tradotti e riassunti da guide della community
+   v: "ok" = fonti concordi · "warn" = da verificare
+   ============================================================ */
+
+const CATS = {
+  relitto:  {label:"Relitti",        color:"#3ee6cf", glyph:"⚓"},
+  segreto:  {label:"Segreti",        color:"#ff4f8b", glyph:"?"},
+  arma:     {label:"Armi uniche",    color:"#ffa24a", glyph:"✦"},
+  veicolo:  {label:"Veicoli rari",   color:"#9d8cff", glyph:"◆"},
+  servizio: {label:"Negozi e basi",  color:"#f6ede4", glyph:"●"},
+  mio:      {label:"I miei punti",   color:"#5fe39a", glyph:"★"}
+};
+
+const REGIONS = [
+  {id:"kalaga", name:"Mount Kalaga National Park", short:"MOUNT KALAGA", x:600, y:200, county:"Lummox County", color:"#5fe39a",
+   ispirazione:"Il nord selvaggio della Florida, foreste e parchi naturali",
+   desc:"Il nord boscoso di Leonida: fiumi, sentieri, aree di caccia e le alture del parco nazionale. È il posto dei misteri: torri panoramiche, un meteorite lungo il sentiero e un cerchio di pietre in cima."},
+  {id:"gellhorn", name:"Port Gellhorn", short:"PORT GELLHORN", x:205, y:330, county:"Kelly County (secondo alcune fonti)", color:"#ffa24a",
+   ispirazione:"Le cittadine portuali del Golfo e della Panhandle",
+   desc:"Città portuale sul Golfo, un po' decaduta. Qui si svolge buona parte del Capitolo 2 con Lucia. Ospita il Kingpin Bowling e, di notte, qualcosa di strano nei boschi."},
+  {id:"ambrosia", name:"Ambrosia", short:"AMBROSIA", x:585, y:470, county:"Kelly County (secondo alcune fonti)", color:"#ffcf5a",
+   ispirazione:"Clewiston e la zona del lago Okeechobee",
+   desc:"Il cuore agricolo e industriale di Leonida, attorno al grande lago. Campi, raffinerie di zucchero, strade lunghe e dritte e qualche garage interessante."},
+  {id:"grass", name:"Grassrivers", short:"GRASSRIVERS", x:590, y:870, county:"Mariana County", color:"#3ee6cf",
+   ispirazione:"Le Everglades",
+   desc:"Paludi a perdita d'occhio, airboat e alligatori. Il paese di Hamlet è il punto di riferimento; a sud c'è il Cottonmouth Lake, dove si aggira lo Skunk Ape."},
+  {id:"vice", name:"Vice City", short:"VICE CITY", x:790, y:905, county:"Vice-Dale County", color:"#ff4f8b",
+   ispirazione:"Miami e Miami Beach",
+   desc:"La metropoli al centro di tutto: Vice Beach, lo skyline, le isole esclusive come Starfish Island e l'aeroporto principale. Dal Capitolo 3 la storia si sposta qui."},
+  {id:"keys", name:"Leonida Keys", short:"LEONIDA KEYS", x:430, y:1110, county:"Mariana County", color:"#9d8cff",
+   ispirazione:"Le Florida Keys",
+   desc:"La catena di isole a sud dove inizia l'avventura di Jason. Key Lento è la base del Capitolo 1: casa di Jason, il negozio di Kenton e le acque piene di relitti spagnoli."}
+];
+
+/* Punti mappa. x,y nel sistema 1000×1300 della mappa schematica. */
+const PLACES = [
+  // ---- relitti (Kenton's Treasures) ----
+  {id:"w-ocio", cat:"relitto", name:"Nuestra Señora del Ocio", where:"Est di Key Lento, oltre l'isolotto a nord-est del negozio di Kenton", x:700, y:1128, v:"ok",
+   items:10, loot:"10 dobloni", how:"Si scopre automaticamente durante la missione della storia «Island Dreams». Dopo la missione Kenton ti chiama e compare il marker verde KR a Key Lento.",
+   desc:"Il relitto-tutorial: ti insegna l'immersione con bombole e metal detector. Raccogli tutti i 10 dobloni sul fondale."},
+  {id:"w-noche", cat:"relitto", name:"Nuestra Señora de la Noche", where:"Sud-est della punta di Key Lento", x:655, y:1222, v:"ok",
+   items:7, loot:"7 reperti, tra cui un guanto d'arme in peltro e un doblone macchiato",
+   desc:"Galeone affondato a sud-est di Key Lento. È uno dei siti più ricchi del primo giro di immersioni."},
+  {id:"w-etica", cat:"relitto", name:"Nuestra Señora de la Ética Laxa", where:"Sul fondale a sud di Key Lento e di Abismo Key", x:555, y:1250, v:"ok",
+   items:5, loot:"5 reperti",
+   desc:"Relitto in acque più profonde fra Key Lento e Abismo Key. Tieni d'occhio l'ossigeno."},
+  {id:"w-sierra", cat:"relitto", name:"Urca de Santa Sierra", where:"Est di Key Lento", x:735, y:1172, v:"warn",
+   items:6, loot:"6 reperti, tra cui la campana della Santa Sierra e un orologio da tasca decorato",
+   desc:"Secondo alcune guide diventa disponibile più avanti nella sequenza di Kenton."},
+  {id:"w-torres", cat:"relitto", name:"Urca de Cinco Torres", where:"Al largo della costa sud-est di Key Lento, vicino a un gruppo di isolotti verdi", x:690, y:1200, v:"warn",
+   items:null, loot:"Numero di reperti non ancora confermato",
+   desc:"Uno dei due relitti vicino agli isolotti verdi a sud-est di Key Lento."},
+  {id:"w-lujuriosa", cat:"relitto", name:"Nuestra Señora Lujuriosa", where:"Costa sud-est di Key Lento, vicino agli isolotti verdi", x:715, y:1235, v:"warn",
+   items:null, loot:"Numero di reperti non ancora confermato",
+   desc:"Si trova vicino all'Urca de Cinco Torres: conviene farli nella stessa uscita in barca."},
+  {id:"w-meer", cat:"relitto", name:"Relitto del Meerwunder", where:"Featherstone Islands", x:318, y:712, v:"warn",
+   items:null, loot:"3 Cocaine Flamingo sulla spiaggia vicina",
+   desc:"Relitto lontano dalle Keys. Prima di immergerti, fai il giro della spiaggia: ci sono tre Cocaine Flamingo da raccogliere."},
+
+  // ---- segreti / easter egg ----
+  {id:"s-egg", cat:"segreto", name:"Il nido di uova dipinte", where:"In cima a una torre radio di Vice City", x:770, y:845, v:"ok",
+   desc:"Un vero easter egg: un nido di uova colorate in cima a una gigantesca torre per le telecomunicazioni. La salita richiede circa sette minuti. Se lanci un uovo, parte una breve scena in cui finisce sul parabrezza di un agente immobiliare."},
+  {id:"s-skunk", cat:"segreto", name:"Lo Skunk Ape", where:"Cottonmouth Lake, a sud di Hamlet (Grassrivers)", x:548, y:880, v:"ok",
+   desc:"Il Bigfoot delle paludi. Lo si può sorprendere mentre divora un cervo su una strada sterrata vicino al lago. È uno dei primi segreti trovati dai giocatori."},
+  {id:"s-ufo", cat:"segreto", name:"Rapimento UFO", where:"Boschi vicino a Port Gellhorn, dopo le 2:00 di notte", x:280, y:285, v:"warn",
+   desc:"Un'auto con le luci tremolanti ti guida nel bosco dopo le 2:00 (ora di gioco). Sarebbe legato al trofeo nascosto «The Truth Is Out There». Segnalato ma non ancora confermato da tutte le fonti."},
+  {id:"s-dexter", cat:"segreto", name:"Trinity Apartments", where:"Washington Island, Vice City", x:888, y:935, v:"ok",
+   desc:"Rockstar ha ricreato il palazzo in cui vive Dexter nella serie TV, ribattezzato Trinity Apartments. Il nome è un omaggio al «Trinity Killer»."},
+  {id:"s-tower", cat:"segreto", name:"Torre con codice 69185", where:"In cima al Mount Kalaga", x:640, y:165, v:"warn",
+   desc:"Arrampicati sulla torre in vetta: su una lavagna c'è scritto il codice 69185. Alcuni lo collegano a un bunker segreto, ma il suo scopo non è confermato."},
+  {id:"s-meteor", cat:"segreto", name:"Meteorite e cerchio di pietre", where:"Sentiero e vetta del Mount Kalaga", x:575, y:225, v:"warn",
+   desc:"A metà sentiero c'è un meteorite schiantato; in cima, un cerchio di pietre con qualcosa che somiglia a una meridiana. I frammenti di meteorite sono anche un tipo di collezionabile."},
+  {id:"s-statue", cat:"segreto", name:"La statua di Manifest Canyon", where:"Manifest Canyon", x:470, y:255, v:"warn",
+   desc:"Avvicinandoti alla statua il controller vibra e si sentono strani bip. Segnalazione della community ancora da verificare."},
+  {id:"s-bunker", cat:"segreto", name:"Bunker militare (voce)", where:"Versante ovest del Mount Kalaga", x:500, y:232, v:"warn",
+   desc:"Una sola fonte parla di un bunker con porta d'acciaio che richiederebbe una tessera da Port Gellhorn e conterrebbe un jetpack prototipo. Nessuna conferma: prendila come una pista, non come un fatto."},
+
+  // ---- armi uniche ----
+  {id:"a-kz59", cat:"arma", name:"Drug Mule KZ-59", kind:"Fucile d'assalto", where:"Sott'acqua, al largo della costa nord delle Riquezas Keys", x:420, y:1180, v:"ok",
+   desc:"Variante unica del fucile d'assalto, nascosta sul fondale. Serve l'attrezzatura da sub."},
+  {id:"a-swamp", cat:"arma", name:"Swamp Bait Akulus", kind:"Revolver", where:"Capanno diroccato nella palude di Pelican Valley", x:470, y:820, v:"ok",
+   desc:"Revolver unico in una baracca in rovina nelle paludi."},
+  {id:"a-hobo", cat:"arma", name:"Hobo «Marabunta Grande»", kind:"Fucile a pompa", where:"Hamlet Storage, dietro all'Hamlet Pawn (Grassrivers)", x:585, y:795, v:"ok",
+   desc:"In una valigetta aperta nel deposito. Entra dall'ingresso sul retro dell'edificio dietro al banco dei pegni di Hamlet."},
+  {id:"a-assassin", cat:"arma", name:"Assassin Nipper .38", kind:"Pistola", where:"Permit Keys, botola nel relitto di una barca-spia", x:770, y:1100, v:"ok",
+   desc:"Nascosta in una botola sul pavimento di una barca-spia naufragata."},
+  {id:"a-turnt", cat:"arma", name:"Turnt Nipper .38", kind:"Pistola", where:"Bobcat Bight, in un parapendio incastrato su un albero", x:735, y:290, v:"warn",
+   desc:"Pende da un parapendio schiantato fra i rami. Le fonti non concordano sul punto esatto."},
+  {id:"a-gutter", cat:"arma", name:"Gutterball Moreland 850", kind:"Fucile", where:"Kingpin Bowling, Port Gellhorn — sul tavolo da biliardo", x:228, y:352, v:"ok",
+   desc:"In una custodia appoggiata sul tavolo da biliardo del bowling."},
+  {id:"a-scrapper", cat:"arma", name:"Scrapper VF5C", kind:"Arma unica", where:"Ultimo piano del La Cascara Motel, durante la rapina Kolt & Associates", x:268, y:392, v:"warn",
+   desc:"Si prende solo durante la rapina: sali all'ultimo piano del motel prima di andartene."},
+  {id:"a-donnie", cat:"arma", name:"H&L .38 di Donnie", kind:"Pistola", where:"Bagagliaio dell'auto di Donnie, missione «Don Gone» (Cap. 1)", x:585, y:1150, v:"ok", missable:true,
+   desc:"Mancabile! Aprila dal bagagliaio prima che l'auto venga distrutta durante la missione."},
+
+  // ---- veicoli rari ----
+  {id:"c-ruiner", cat:"veicolo", name:"Ruiner Turbo", where:"Casa a est dell'abitazione di Key Lento", x:640, y:1160, v:"warn",
+   desc:"Compare parcheggiata davanti a una casa poco a est della base di Key Lento. Può non essere sempre presente."},
+  {id:"c-elegy", cat:"veicolo", name:"Elegy (stile Skyline)", where:"Villa sorvegliata su Starfish Island", x:858, y:878, v:"warn",
+   desc:"Nel vialetto di una villa con le guardie: entra in silenzio o preparati a una fuga."},
+  {id:"c-gauntlet", cat:"veicolo", name:"Gauntlet «Copperhead»", where:"In un garage ad Ambrosia", x:545, y:520, v:"warn",
+   desc:"Muscle car in un garage della zona di Ambrosia. Ricordati il costo di registrazione per tenerla."},
+
+  // ---- negozi e basi ----
+  {id:"b-jason", cat:"servizio", name:"Casa di Jason", where:"Key Lento", x:590, y:1168, v:"ok",
+   desc:"Base del Capitolo 1. Qui ci sono gli attrezzi per gli allenamenti, il primo punto di meditazione (mancabile!) e Dolores, il serpente di Jason: nutrirlo dà una spinta iniziale alla Concentrazione. Nella camera da letto puoi nascondere i contanti."},
+  {id:"b-kenton", cat:"servizio", name:"Negozio di Kenton", where:"Key Lento", x:618, y:1148, v:"ok",
+   desc:"Il cacciatore di tesori che compra i reperti dei relitti. Dopo «Island Dreams» ti affida le immersioni. Il primo relitto completo vale circa 1.400 $."},
+  {id:"b-ammu", cat:"servizio", name:"Ammu-Nation di Key Lento", where:"Key Lento", x:603, y:1183, v:"ok",
+   desc:"Il primo negozio d'armi, disponibile subito dopo il tutorial. Compra presto un silenziatore e il giubbotto antiproiettile."},
+  {id:"b-boat", cat:"servizio", name:"Barca di Jason", where:"Pontile di Key Lento", x:572, y:1150, v:"ok",
+   desc:"A bordo trovi l'attrezzatura da sub e il metal detector per le immersioni."},
+  {id:"b-king", cat:"servizio", name:"Capanni Kingfisher", where:"Leonida Keys", x:510, y:1170, v:"warn",
+   desc:"Operazione illegale nei capanni dei pescatori. Svuotata del tutto può fruttare 1.000–2.000 $ o più."}
+];
+
+const CHEATS = [
+  {id:"ch-money", name:"250.000 $", cat:"Soldi", seq:"URDLULDR", unlock:"Completa la storia principale", v:"ok", note:"Si può inserire più volte per accumulare denaro."},
+  {id:"ch-focus", name:"Concentrazione illimitata", cat:"Giocatore", seq:"DUUDUDUDUR", unlock:"Dopo la storia principale", v:"ok"},
+  {id:"ch-armor", name:"Giubbotto antiproiettile", cat:"Giocatore", seq:"DULUUUUUDD", unlock:"Completa 100 allenamenti", v:"ok"},
+  {id:"ch-maxammo", name:"Munizioni al massimo", cat:"Armi", seq:"DURDLLUUDL", unlock:"Medaglie al poligono di tiro", v:"ok"},
+  {id:"ch-infammo", name:"Munizioni infinite", cat:"Armi", seq:null, unlock:"Medaglie al poligono di tiro", v:"warn"},
+  {id:"ch-noreload", name:"Niente ricarica", cat:"Armi", seq:null, unlock:"Medaglie al poligono di tiro", v:"warn"},
+  {id:"ch-wanted", name:"Aumenta il livello di ricercato", cat:"Polizia", seq:"LDRDURU", unlock:"Sfuggi 50 volte a un livello di ricercato di 3 stelle", v:"warn"},
+  {id:"ch-heat", name:"Aumenta il livello di Heat", cat:"Polizia", seq:null, unlock:"Seminare 3 stelle 25 volte", v:"warn"},
+  {id:"ch-drunk", name:"Modalità ubriaco", cat:"Divertimento", seq:"ULRUULRULR", unlock:"Requisito non confermato", v:"warn"},
+  {id:"ch-vforce", name:"Vehicle Force", cat:"Veicoli", seq:null, unlock:"Elimina 25 nemici usando un veicolo", v:"warn"},
+  {id:"ch-attack", name:"Attack Force", cat:"Armi", seq:null, unlock:"Requisito non confermato", v:"warn"},
+  {id:"ch-hell", name:"Hellscape", cat:"Divertimento", seq:null, unlock:"Ruba 100 veicoli della polizia", v:"warn"},
+  {id:"ch-thrax", name:"Genera: Truffade Thrax", cat:"Veicoli", seq:null, unlock:"Requisito non confermato", v:"warn"},
+  {id:"ch-speeder", name:"Genera: Speeder 700 GT", cat:"Veicoli", seq:null, unlock:"Requisito non confermato", v:"warn"},
+  {id:"ch-sparrow", name:"Genera: Nagasaki Sea Sparrow", cat:"Veicoli", seq:null, unlock:"Requisito non confermato", v:"warn"},
+  {id:"ch-para", name:"Paracadute", cat:"Giocatore", seq:null, unlock:"Non ancora scoperto", v:"warn"},
+  {id:"ch-nofall", name:"Nessun danno da caduta", cat:"Giocatore", seq:null, unlock:"Non ancora scoperto", v:"warn"},
+  {id:"ch-repair", name:"Ripara veicolo", cat:"Veicoli", seq:null, unlock:"Non ancora scoperto", v:"warn"}
+];
+
+const EGGS = [
+  {id:"e-rdr", name:"Omaggi a Red Dead Redemption", desc:"In giro per Leonida si trovano libri ispirati a Red Dead Redemption e il cappello di Arthur Morgan.", v:"ok"},
+  {id:"e-tony", name:"Tony il pappagallo", desc:"Il pappagallo parlante di San Andreas fa la sua comparsa.", v:"ok"},
+  {id:"e-lc", name:"Le memorie di Liberty City", desc:"Un libro di memorie su Liberty City cita fatti del 2008, l'anno in cui è ambientato GTA IV.", v:"ok"},
+  {id:"e-belville", name:"La casa della foto del 2021", desc:"La casa di Belville apparsa in una vecchia foto è stata ritrovata il giorno dell'uscita da un progetto di mappatura della community. Dentro c'è il covo di un complottista.", v:"ok"},
+  {id:"e-chiliad", name:"Chiacchiere sul Mount Chiliad", desc:"In un bar qualcuno parlerebbe del Mount Chiliad di GTA V.", v:"warn"},
+  {id:"e-plate", name:"Targa alla Seinfeld", desc:"Una targa personalizzata che cita Seinfeld.", v:"warn"},
+  {id:"e-crab", name:"Il granchio gigante", desc:"Avvistamenti di un granchio enorme lungo la costa.", v:"warn"}
+];
+
+const COLLECT = [
+  {id:"k-cards", name:"Carte collezionabili", total:480, need:"15 set su 18", reward:"Trofeo «Don't Touch My Deck» completando 3 set", v:"ok", note:"18 set da 12 a 36 carte."},
+  {id:"k-flamingo", name:"Cocaine Flamingo", total:125, need:"100", reward:"Conta per il 100%", v:"ok"},
+  {id:"k-waink", name:"Scansioni WAiNK", total:112, need:"100", reward:"Conta per il 100%", v:"warn", note:"Un'altra guida conta 31 monumenti da scansionare."},
+  {id:"k-under", name:"Scoperte subacquee", total:33, need:"Tutte e 33", reward:"Pagamenti da Kenton · trofeo segreto «This Was No Boat Accident»", v:"ok", note:"Divise in 7 set di recupero per Kenton."},
+  {id:"k-styles", name:"Stili scoperti", total:79, need:"70", reward:"Nuovi capi per il guardaroba", v:"ok"},
+  {id:"k-watch", name:"Orologi di lusso", total:34, need:"—", reward:"Da rivendere o collezionare", v:"ok", note:"Di solito nelle operazioni delle gang."},
+  {id:"k-stunt", name:"Acrobazie", total:397, need:"300", reward:"Conta per il 100%", v:"ok", note:"Quattro tipi diversi."},
+  {id:"k-read", name:"Letture (riviste, libri, fumetti)", total:27, need:"—", reward:"Più 7 scambi di libri", v:"ok"},
+  {id:"k-medit", name:"Punti di meditazione", total:18, need:"—", reward:"Trofeo «Positive Mental Attitude» · più Concentrazione", v:"ok", note:"Il primo è a casa di Jason nel Capitolo 1 e si può perdere."}
+];
+
+const TIPS_START = [
+  ["Compra subito un silenziatore","All'Ammu-Nation di Key Lento, aperto appena finito il tutorial. Costa poco e rende molto più semplice quasi ogni scontro."],
+  ["Prendi il giubbotto antiproiettile","Si vede come una barra blu che assorbe i colpi. Lo vende sempre l'Ammu-Nation."],
+  ["Non tenere troppi contanti in tasca","I soldi che porti addosso li perdi se muori o vieni arrestato, e all'inizio non c'è un bancomat. Nascondili nella camera di Jason."],
+  ["Aspetta a comprare garage","Ce ne sono poco meno di una dozzina, ma si sbloccano solo quando Jason e Lucia lasciano Key Lento. A quel punto prendine uno."],
+  ["Fai subito le attività secondarie","Pesca, biliardo, basket, golf e poligono sono già disponibili nelle Keys. Caccia e altri sport acquatici arrivano dopo."],
+  ["Allenati a casa di Jason","Pesi, basket e gli altri allenamenti migliorano le statistiche. 100 allenamenti sbloccano il trucco del giubbotto."],
+  ["Potenzia la Concentrazione","Canestri, biliardo e meditazione allungano il rallentatore in combattimento. Nutrire Dolores, il serpente di Jason, dà una spinta iniziale."],
+  ["Non perdere il primo punto di meditazione","È a casa di Jason nel Capitolo 1 e potrebbe non essere più raggiungibile dopo: serve per il trofeo «Positive Mental Attitude»."],
+  ["Prendi la pistola di Donnie","Nella missione «Don Gone» apri il bagagliaio della sua auto prima che venga distrutta: c'è un'H&L .38 unica."],
+  ["Fai le commissioni di Shirley e le immersioni di Kenton","Sono due delle prime attività secondarie, sicure e ben pagate."]
+];
+
+const TIPS_MONEY = [
+  ["Capitolo 1: non grindare","Le ultime missioni del capitolo azzerano tutti i soldi tranne quelli nei Family Savings. «Tourist Trap» è il punto di non ritorno: guadagna quanto basta e vai avanti.","Cap. 1"],
+  ["Operazioni illegali","Covi delle gang segnati sulla mappa. I capanni Kingfisher, svuotati del tutto, rendono circa 1.000–2.000 $ o più.","Cap. 1+"],
+  ["Rivendi i narcotici","Ruba la droga dalle operazioni illegali e vendila a Brian o Donnie nel Capitolo 1, a Dunk nel Capitolo 2. È il metodo più veloce dei primi due capitoli.","Cap. 1–2"],
+  ["Immersioni per Kenton","Niente rapine, niente sparatorie: è il miglior guadagno ripetibile all'inizio. Il primo relitto vale circa 1.400 $.","Sicuro"],
+  ["Vendi auto a Moses","Dal Capitolo 2 è il guadagno più alto a inizio partita. Moses non ha un limite giornaliero di auto acquistate.","Cap. 2"],
+  ["Metti al sicuro il bottino","Muori o ti arrestano e perdi i contanti che hai addosso. Deposita appena puoi.","Sempre"]
+];
+
+const CHAPTERS = [
+  {n:1, t:"Just Like Paradise", tag:"Leonida Keys", count:"22–34 missioni secondo le fonti",
+   body:"Lucia è in prigione, mentre Jason lavora per Brian fra le isole delle Keys. Il capitolo introduce Kenton e le immersioni (con «Island Dreams») e si chiude con il ritorno in libertà di Lucia. Attenzione: le missioni finali azzerano i contanti che non sono nei Family Savings.",
+   missions:["Island Dreams","Don Gone","Tourist Trap"]},
+  {n:2, t:"Port Gellhorn", tag:"Port Gellhorn", count:"11 missioni principali",
+   body:"Lucia si adatta alla vita a Port Gellhorn. Arrivano Moses (che compra auto) e Dunk (che compra narcotici). Il capitolo finisce con Jason e Lucia sotto assedio in un motel e una fuga dalla polizia con l'auto di Jason.",
+   missions:["Kolt & Associates"]},
+  {n:3, t:"Tits Ass Drug Money", tag:"Vice City", count:"circa 26 missioni",
+   body:"La coppia arriva a Vice City e scivola sempre più a fondo nel mondo criminale della città.",
+   missions:[]},
+  {n:4, t:"Vice City, Baby", tag:"Vice City", count:"",
+   body:"Il crimine si fa più grande e più rischioso, fra avvocati, carichi pesanti e feste da organizzare.",
+   missions:["Lawyer Up","Heavy Lifting","Fully Catered","Sunset"]},
+  {n:5, t:"Top of the World, Ma", tag:"Finale", count:"7 missioni",
+   body:"Il capitolo più corto e il finale della storia. Finirlo sblocca il trucco da 250.000 $ e la Concentrazione illimitata.",
+   missions:["Bird in the Hand","Protective Custody"]}
+];
+
+const ACTIVITIES = [
+  ["Immersioni e caccia al tesoro","Con Kenton, nelle Keys. Bombole e metal detector sono sulla barca di Jason."],
+  ["Pesca","Disponibile fin dalle Keys."],
+  ["Biliardo","Allena anche la Concentrazione."],
+  ["Basket","A casa di Jason e nei campetti: conta come allenamento."],
+  ["Golf","Tra le prime attività sbloccate."],
+  ["Poligono di tiro","Le medaglie sbloccano i trucchi sulle munizioni."],
+  ["Caccia","Si apre più avanti, soprattutto nel parco del Mount Kalaga."],
+  ["Meditazione","18 punti sparsi per Leonida."],
+  ["Commissioni di Shirley","Una delle prime catene di lavoretti secondari."],
+  ["Operazioni illegali","Covi delle gang da ripulire: soldi, droga e orologi di lusso."]
+];
+
+const VEHICLES_EXTRA = [
+  {name:"Truffade Thrax", note:"Supercar ottenibile anche con un trucco (da sbloccare)."},
+  {name:"Speeder 700 GT", note:"Disponibile anche via trucco."},
+  {name:"Nagasaki Sea Sparrow", note:"Elicottero anfibio, anche via trucco."}
+];
+
+const SOURCES = [
+  ["Red Bull Gaming · trucchi","https://www.redbull.com/us-en/gta-6-cheat-codes"],
+  ["Gamer Tweak · lista trucchi","https://gamertweak.com/cheat-codes-gta-6/"],
+  ["Rare Thief · codici","https://rarethief.com/all-gta-vi-cheat-codes/"],
+  ["The Click · codici e relitti","https://www.theclick.gg/gta-6-cheat-codes/"],
+  ["GTA Boom · immersioni","https://www.gtaboom.com/gta-6-treasure-hunting-2b73"],
+  ["Push Square · scoperte subacquee","https://www.pushsquare.com/guides/gta-6-underwater-discoveries-locations-and-kentons-treasures"],
+  ["Nerds Chalk · Island Dreams","https://nerdschalk.com/island-dreams-kentons-shipwreck-grand-theft-auto-vi"],
+  ["Gmtreks · collezionabili","https://gmtreks.com/gta6/page/01M7Q14Z47TMRMR101MF07KYYA"],
+  ["GameBoost · collezionabili","https://gameboost.com/blog/gta-6-collectibles-guide"],
+  ["Mobalytics · regioni","https://mobalytics.gg/gamebase/guides/grand-theft-auto-6-interactive-map"],
+  ["GTABase · luoghi","https://www.gtabase.com/gta-6/map-locations/"],
+  ["ComicBook · easter egg","https://comicbook.com/gaming/list/5-most-exciting-gta-6-easter-eggs-players-have-found-after-launch-day/"],
+  ["Gaming Bible · easter egg","https://www.gamingbible.com/news/gta-6-easter-eggs-778903-20261120"],
+  ["Vice · fare soldi","https://www.vice.com/en/article/gta-6-how-to-make-money-fast/"],
+  ["G2A News · soldi per capitolo","https://www.g2a.com/news/gta-6-news/gta-6-money-making-guide/"],
+  ["KeenGamer · armi uniche","https://www.keengamer.com/articles/guides/gta-6-best-early-game-unique-weapon-locations/"],
+  ["Sportskeeda · armi leggendarie","https://www.sportskeeda.com/gta/all-hidden-legendary-weapons-locations-gta-6"],
+  ["GameSpot · cosa fare prima","https://www.gamespot.com/articles/5-best-things-to-do-first-in-gta-6/"],
+  ["Esports.gg · missioni","https://esports.gg/guides/grand-theft-auto-6/gta-6-missions-all-main-story-missions-and-chapters/"],
+  ["IGN · wiki di GTA 6","https://www.ign.com/wikis/gta-6"]
+];
+
+/* ============================================================
+   STATO (solo su questo dispositivo)
+   ============================================================ */
+const KEY = "atlante-leonida-v1";
+let S = {found:{}, counts:{}, pins:[], spoilers:false, filters:null, tab:{}};
+try{ const raw = localStorage.getItem(KEY); if(raw) S = Object.assign(S, JSON.parse(raw)); }catch(e){}
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
+if(!S.filters) S.filters = Object.fromEntries(Object.keys(CATS).map(k=>[k,true]));
+
+/* ============================================================
+   UTILITÀ
+   ============================================================ */
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const ARROW = {U:"↑",D:"↓",L:"←",R:"→"};
+const ARROW_IT = {U:"su",D:"giù",L:"sinistra",R:"destra"};
+const vPill = v => v==="ok" ? '<span class="pill ok">confermato</span>' : '<span class="pill warn">da verificare</span>';
+function toast(msg){ const t=$("#toast"); t.textContent=msg; t.hidden=false; clearTimeout(toast._t); toast._t=setTimeout(()=>t.hidden=true,1800); }
+function setFound(id, val){ if(val) S.found[id]=true; else delete S.found[id]; save(); renderMarkers(); renderHomeProgress(); }
+function checkbox(id, label="Trovato"){
+  return `<label class="check"><input type="checkbox" data-found="${id}" ${S.found[id]?"checked":""}><span>${label}</span></label>`;
+}
+document.addEventListener("change", e=>{
+  const f = e.target.closest("[data-found]");
+  if(f){ setFound(f.dataset.found, f.checked); document.querySelectorAll(`[data-found="${f.dataset.found}"]`).forEach(x=>x.checked=f.checked); }
+});
+
+/* ============================================================
+   ROUTING
+   ============================================================ */
+const VIEWS = ["home","mappa","guida","trucchi","segreti","raccolta"];
+function route(){
+  const h = (location.hash||"").slice(1);
+  const v = VIEWS.includes(h) ? h : "home";
+  document.querySelectorAll(".view").forEach(el=>el.hidden = el.dataset.view!==v);
+  document.querySelectorAll(".nav a").forEach(a=>{ if(a.dataset.v===v) a.setAttribute("aria-current","page"); else a.removeAttribute("aria-current"); });
+  if(v==="mappa") requestAnimationFrame(fitMap);
+  window.scrollTo(0,0);
+}
+window.addEventListener("hashchange", route);
+
+/* ============================================================
+   HOME
+   ============================================================ */
+function renderHomeProgress(){
+  const groups = [
+    ["Relitti di Kenton", PLACES.filter(p=>p.cat==="relitto")],
+    ["Luoghi segreti", PLACES.filter(p=>p.cat==="segreto")],
+    ["Armi uniche", PLACES.filter(p=>p.cat==="arma")],
+    ["Easter egg", EGGS]
+  ];
+  let html = groups.map(([name, arr])=>{
+    const n = arr.filter(x=>S.found[x.id]).length, t=arr.length;
+    return `<div class="prow"><span>${name}</span><span class="mono">${n}/${t}</span><div class="bar"><i style="width:${t?Math.round(n/t*100):0}%"></i></div></div>`;
+  }).join("");
+  const sumC = COLLECT.reduce((a,c)=>a+Math.min(S.counts[c.id]||0,c.total),0), totC = COLLECT.reduce((a,c)=>a+c.total,0);
+  html += `<div class="prow"><span>Collezionabili raccolti</span><span class="mono">${sumC}/${totC}</span><div class="bar"><i style="width:${Math.round(sumC/totC*100)}%"></i></div></div>`;
+  $("#homeProgress").innerHTML = html;
+}
+
+/* ============================================================
+   MAPPA
+   ============================================================ */
+const svg = $("#map"), vp = $("#vp");
+const VBW=1000, VBH=1300;
+let T = {k:1, x:0, y:0};
+const MIN_K=.8, MAX_K=7;
+
+function drawBase(){
+  const coast = "M 70 150 C 300 110, 600 90, 900 100 C 945 200, 940 320, 910 430 C 885 540, 878 640, 862 740 C 852 820, 852 900, 822 980 C 792 1040, 722 1070, 642 1060 C 572 1050, 502 1000, 472 940 C 442 870, 430 800, 400 730 C 370 660, 345 580, 330 500 C 322 440, 300 405, 250 398 C 190 392, 120 372, 82 322 C 56 272, 56 200, 70 150 Z";
+  const keys = [[770,1085,26,9,-25],[728,1112,30,10,-20],[690,1140,22,8,-15],[640,1160,52,16,-12],[600,1168,34,12,-8],[545,1200,24,9,-5],[505,1178,30,10,-4],[455,1196,26,9,0],[418,1206,32,11,4],[370,1222,26,9,8],[330,1236,20,8,10],[700,1205,10,6,0],[722,1222,8,5,0],[688,1225,7,5,0],[300,700,22,9,30],[330,724,14,7,20]];
+  const isl = keys.map(([x,y,rx,ry,r])=>`<ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${ry}" transform="rotate(${r} ${x} ${y})" fill="url(#gLand)" stroke="#e8d9b0" stroke-opacity=".55" stroke-width="2"/>`).join("");
+  $("#mapBase").innerHTML = `
+    <path d="${coast}" fill="none" stroke="#3ee6cf" stroke-opacity=".12" stroke-width="26"/>
+    <path d="${coast}" fill="url(#gLand)" stroke="#e8d9b0" stroke-opacity=".7" stroke-width="3" filter="url(#fShadow)"/>
+    <path d="M 120 170 C 330 130, 640 110, 880 125 C 905 210, 900 290, 880 330 C 700 330, 480 330, 330 360 C 250 330, 160 300, 110 250 Z" fill="url(#pPine)"/>
+    <path d="M 450 760 C 520 720, 690 720, 800 760 C 820 840, 790 950, 760 1010 C 690 1050, 580 1040, 520 990 C 480 930, 450 850, 450 760 Z" fill="url(#pSwamp)"/>
+    <path d="M 745 830 C 790 815, 835 830, 845 870 C 845 920, 830 960, 800 975 C 760 975, 735 940, 730 900 C 728 870, 732 845, 745 830 Z" fill="url(#pCity)"/>
+    <path d="M 150 300 C 190 290, 250 300, 290 330 C 290 360, 270 385, 240 388 C 200 385, 160 370, 140 340 Z" fill="url(#pCity)"/>
+    <ellipse cx="640" cy="560" rx="88" ry="70" fill="#1c5a72" stroke="#3ee6cf" stroke-opacity=".35" stroke-width="2"/>
+    <path d="M 640 490 C 630 420, 660 360, 640 300 C 620 250, 650 210, 640 170" fill="none" stroke="#1c5a72" stroke-width="5" stroke-linecap="round"/>
+    <path d="M 610 625 C 600 690, 620 740, 600 800" fill="none" stroke="#1c5a72" stroke-width="4" stroke-linecap="round"/>
+    <path d="M 230 395 C 260 460, 300 520, 340 560" fill="none" stroke="#1c5a72" stroke-width="3" stroke-linecap="round" opacity=".7"/>
+    <path d="M 880 820 C 892 850, 895 900, 885 950 L 878 950 C 885 900, 884 852, 872 822 Z" fill="url(#gLand)" stroke="#e8d9b0" stroke-opacity=".6" stroke-width="1.5"/>
+    <ellipse cx="858" cy="878" rx="9" ry="6" fill="url(#gLand)" stroke="#e8d9b0" stroke-opacity=".6" stroke-width="1.5"/>
+    <ellipse cx="888" cy="935" rx="7" ry="9" fill="url(#gLand)" stroke="#e8d9b0" stroke-opacity=".6" stroke-width="1.5"/>
+    ${isl}
+    <g fill="none" stroke="#f6ede4" stroke-opacity=".28" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 0">
+      <path d="M 870 140 C 880 330, 860 600, 830 880"/>
+      <path d="M 220 360 C 380 420, 520 440, 600 480 C 700 560, 760 720, 790 880"/>
+      <path d="M 790 900 C 700 870, 560 820, 470 760 C 430 700, 380 560, 330 430"/>
+      <path d="M 780 990 C 770 1040, 760 1070, 770 1085 L 728 1112 L 690 1140 L 640 1160 L 600 1168 L 545 1200 L 505 1178 L 455 1196 L 418 1206 L 370 1222" stroke-dasharray="6 7" stroke-opacity=".35"/>
+    </g>
+    <g fill="none" stroke="#f6ede4" stroke-opacity=".07" stroke-width="1">
+      ${Array.from({length:12},(_,i)=>`<path d="M ${i*100} -100 V 1400"/>`).join("")}
+      ${Array.from({length:15},(_,i)=>`<path d="M -100 ${i*100} H 1100"/>`).join("")}
+    </g>
+    <text x="40" y="1060" class="map-sub" font-size="15" letter-spacing="3" opacity=".7">GOLFO</text>
+    <text x="915" y="680" class="map-sub" font-size="15" letter-spacing="3" opacity=".7" transform="rotate(90 915 680)">OCEANO ATLANTICO</text>
+    <g transform="translate(905 1210)" opacity=".75">
+      <circle r="28" fill="none" stroke="#f6ede4" stroke-opacity=".4"/>
+      <path d="M0 -24 L7 0 L0 24 L-7 0 Z" fill="#f6ede4" fill-opacity=".25"/><path d="M0 -24 L7 0 L-7 0 Z" fill="#ff4f8b"/>
+      <text y="-34" text-anchor="middle" class="map-sub" font-size="13">N</text>
+    </g>`;
+  const sublabels = [["Key Lento",600,1140],["Abismo Key",540,1228],["Riquezas Keys",410,1240],["Permit Keys",770,1068],["Hamlet",585,780],["Cottonmouth Lake",548,905],["Vice Beach",900,812],["Starfish Is.",850,862],["Featherstone Is.",315,680],["Pelican Valley",450,845],["Bobcat Bight",740,315],["Manifest Canyon",470,280]];
+  $("#mapLabels").innerHTML =
+    REGIONS.map(r=>`<text x="${r.x}" y="${r.y}" text-anchor="middle" class="map-lbl" style="font-size:calc(${r.id==='kalaga'?22:24}px * var(--lk,1))">${esc(r.short)}</text>`).join("") +
+    sublabels.map(([t,x,y])=>`<text x="${x}" y="${y}" text-anchor="middle" class="map-sub" style="font-size:calc(12px * var(--lk,1))">${esc(t)}</text>`).join("");
+}
+
+function allPlaces(){ return PLACES.concat(S.pins.map(p=>Object.assign({cat:"mio", v:"mine"}, p))); }
+let selected = null;
+function renderMarkers(){
+  const list = allPlaces().filter(p=>S.filters[p.cat]);
+  $("#mapMarkers").innerHTML = list.map(p=>{
+    const c = CATS[p.cat];
+    return `<g transform="translate(${p.x} ${p.y})" data-id="${p.id}"><g class="mk${S.found[p.id]?" found":""}${selected===p.id?" sel":""}">
+      <circle class="halo" r="22" fill="none" stroke="${c.color}" stroke-width="3"/>
+      <g class="core"><circle r="14" fill="#140f24" stroke="${c.color}" stroke-width="3"/>
+      <text text-anchor="middle" dy="5" font-size="14" font-weight="800" fill="${c.color}" font-family="system-ui">${c.glyph}</text></g>
+      <circle r="24" fill="transparent"/></g></g>`;
+  }).join("");
+  applyT();
+  $("#mapCount").textContent = list.length;
+  $("#mapList").innerHTML = list.length ? list.map(p=>`<button class="li-btn${selected===p.id?" sel":""}" data-goto="${p.id}">
+      <span class="dot" style="background:${CATS[p.cat].color}"></span>
+      <span style="min-width:0"><b>${esc(p.name)}${S.found[p.id]?" ✓":""}</b><small>${esc(p.where||CATS[p.cat].label)}</small></span></button>`).join("")
+    : '<p class="empty">Nessuna categoria attiva. Accendi un filtro sopra la mappa.</p>';
+}
+function renderFilters(){
+  $("#mapFilters").innerHTML = Object.entries(CATS).map(([k,c])=>`<button class="chip" data-cat="${k}" aria-pressed="${!!S.filters[k]}"><span class="dot" style="background:${c.color}"></span>${c.label}</button>`).join("");
+}
+$("#mapFilters").addEventListener("click", e=>{
+  const b = e.target.closest("[data-cat]"); if(!b) return;
+  S.filters[b.dataset.cat] = !S.filters[b.dataset.cat]; save(); renderFilters(); renderMarkers();
+});
+$("#mapList").addEventListener("click", e=>{ const b=e.target.closest("[data-goto]"); if(b) focusPlace(b.dataset.goto); });
+
+function applyT(){
+  vp.setAttribute("transform", `translate(${T.x} ${T.y}) scale(${T.k})`);
+  svg.style.setProperty("--inv", (1/Math.pow(T.k,.85)).toFixed(3));
+  svg.style.setProperty("--lk", (1/Math.pow(T.k,.6)).toFixed(3));
+}
+function clampT(){
+  T.k = Math.max(MIN_K, Math.min(MAX_K, T.k));
+  const m = 300;
+  T.x = Math.min(m, Math.max(VBW - VBW*T.k - m, T.x));
+  T.y = Math.min(m, Math.max(VBH - VBH*T.k - m, T.y));
+}
+function fitMap(){ T={k:1,x:0,y:0}; applyT(); }
+function zoomAt(f, px, py){
+  const nk = Math.max(MIN_K, Math.min(MAX_K, T.k*f)); const r = nk/T.k;
+  T.x = px - (px - T.x)*r; T.y = py - (py - T.y)*r; T.k = nk; clampT(); applyT();
+}
+function svgPoint(cx, cy){
+  const r = svg.getBoundingClientRect();
+  const s = Math.min(r.width/VBW, r.height/VBH);
+  const ox = (r.width - VBW*s)/2, oy = (r.height - VBH*s)/2;
+  return {x:(cx - r.left - ox)/s, y:(cy - r.top - oy)/s, s};
+}
+function toMap(pt){ return {x:(pt.x - T.x)/T.k, y:(pt.y - T.y)/T.k}; }
+
+const ptrs = new Map(); let gesture=null, moved=0;
+svg.addEventListener("pointerdown", e=>{
+  svg.setPointerCapture(e.pointerId);
+  ptrs.set(e.pointerId, {x:e.clientX, y:e.clientY});
+  moved = 0;
+  if(ptrs.size===1){ gesture={type:"pan", sx:e.clientX, sy:e.clientY, tx:T.x, ty:T.y, target:e.target}; }
+  else if(ptrs.size===2){
+    const [a,b] = [...ptrs.values()];
+    const mid = svgPoint((a.x+b.x)/2,(a.y+b.y)/2);
+    gesture={type:"pinch", d:Math.hypot(a.x-b.x,a.y-b.y), k:T.k, tx:T.x, ty:T.y, mid};
+  }
+});
+svg.addEventListener("pointermove", e=>{
+  if(!ptrs.has(e.pointerId) || !gesture) return;
+  ptrs.set(e.pointerId, {x:e.clientX, y:e.clientY});
+  if(gesture.type==="pan" && ptrs.size===1){
+    const s = svgPoint(0,0).s;
+    const dx=(e.clientX-gesture.sx)/s, dy=(e.clientY-gesture.sy)/s;
+    moved = Math.max(moved, Math.hypot(e.clientX-gesture.sx, e.clientY-gesture.sy));
+    T.x = gesture.tx+dx; T.y = gesture.ty+dy; clampT(); applyT();
+  } else if(gesture.type==="pinch" && ptrs.size===2){
+    const [a,b] = [...ptrs.values()];
+    const d = Math.hypot(a.x-b.x,a.y-b.y); moved = 99;
+    const nk = Math.max(MIN_K, Math.min(MAX_K, gesture.k*d/gesture.d)); const r = nk/gesture.k;
+    const m = gesture.mid;
+    T.k = nk; T.x = m.x - (m.x - gesture.tx)*r; T.y = m.y - (m.y - gesture.ty)*r; clampT(); applyT();
+  }
+});
+function endPtr(e){
+  const g = gesture;
+  ptrs.delete(e.pointerId);
+  if(ptrs.size===0){
+    if(g && g.type==="pan" && moved<7){
+      const mk = g.target.closest && g.target.closest("[data-id]");
+      if(addMode){
+        const p = toMap(svgPoint(e.clientX, e.clientY));
+        openPinForm(Math.round(p.x), Math.round(p.y));
+      } else if(mk){ openPlace(mk.dataset.id); }
+    }
+    gesture=null;
+  } else if(ptrs.size===1){
+    const [a] = [...ptrs.values()];
+    gesture={type:"pan", sx:a.x, sy:a.y, tx:T.x, ty:T.y, target:svg};
+  }
+}
+svg.addEventListener("pointerup", endPtr);
+svg.addEventListener("pointercancel", endPtr);
+svg.addEventListener("wheel", e=>{ e.preventDefault(); const p=svgPoint(e.clientX,e.clientY); zoomAt(Math.exp(-e.deltaY*0.0015), p.x, p.y); }, {passive:false});
+$("#zIn").onclick = ()=>zoomAt(1.5, VBW/2, VBH/2);
+$("#zOut").onclick = ()=>zoomAt(1/1.5, VBW/2, VBH/2);
+$("#zReset").onclick = fitMap;
+
+let addMode=false;
+$("#addPin").onclick = ()=>{
+  addMode=!addMode; $("#addPin").setAttribute("aria-pressed", addMode);
+  svg.classList.toggle("adding", addMode);
+  const h=$("#mapHint"); h.classList.toggle("on", addMode);
+  h.textContent = addMode ? "Tocca la mappa dove vuoi il segnaposto" : "Posizioni indicative · mappa schematica";
+};
+
+function focusPlace(id){
+  const p = allPlaces().find(x=>x.id===id); if(!p) return;
+  if(!S.filters[p.cat]){ S.filters[p.cat]=true; save(); renderFilters(); }
+  if(location.hash!=="#mappa"){ location.hash="mappa"; }
+  setTimeout(()=>{
+    T.k = Math.max(T.k, 3);
+    T.x = VBW/2 - p.x*T.k; T.y = VBH/2 - p.y*T.k; clampT();
+    selected = id; renderMarkers(); openPlace(id);
+  }, 30);
+}
+
+/* ============================================================
+   SHEET (dettagli)
+   ============================================================ */
+function openSheet(html){
+  const sh=$("#sheet"); sh.innerHTML = '<div class="grab"></div>'+html; sh.hidden=false; $("#scrim").hidden=false;
+  const f = sh.querySelector("input,button"); if(f && f.tagName==="INPUT") setTimeout(()=>f.focus(),60);
+}
+function closeSheet(){ $("#sheet").hidden=true; $("#scrim").hidden=true; if(selected){ selected=null; renderMarkers(); } }
+$("#scrim").onclick = closeSheet;
+document.addEventListener("keydown", e=>{ if(e.key==="Escape"){ closeSheet(); closeSearch(); } });
+
+function openPlace(id){
+  const p = allPlaces().find(x=>x.id===id); if(!p) return;
+  selected=id; renderMarkers();
+  const c = CATS[p.cat];
+  let meta = "";
+  if(p.kind) meta += `<span class="pill">${esc(p.kind)}</span>`;
+  if(p.items) meta += `<span class="pill sea">${p.items} tesori</span>`;
+  if(p.missable) meta += `<span class="pill hot">mancabile</span>`;
+  if(p.v==="ok"||p.v==="warn") meta += vPill(p.v);
+  openSheet(`
+    <span class="eyebrow" style="color:${c.color}">${c.label}</span>
+    <h3 id="sheetTitle" style="font-size:1.2rem">${esc(p.name)}</h3>
+    ${meta?`<div class="row" style="display:flex;gap:6px;flex-wrap:wrap">${meta}</div>`:""}
+    ${p.where?`<p><b>Dove:</b> ${esc(p.where)}</p>`:""}
+    ${p.desc?`<p>${esc(p.desc)}</p>`:""}
+    ${p.loot?`<p><b>Bottino:</b> ${esc(p.loot)}</p>`:""}
+    ${p.how?`<p><b>Come sbloccarlo:</b> ${esc(p.how)}</p>`:""}
+    <div class="acts">
+      ${checkbox(p.id)}
+      <span style="flex:1"></span>
+      ${p.cat==="mio"?`<button class="btn small" data-delpin="${p.id}">Elimina</button>`:""}
+      <button class="btn small" data-close>Chiudi</button>
+    </div>`);
+}
+$("#sheet").addEventListener("click", e=>{
+  if(e.target.closest("[data-close]")) closeSheet();
+  const d = e.target.closest("[data-delpin]");
+  if(d){ S.pins = S.pins.filter(p=>p.id!==d.dataset.delpin); delete S.found[d.dataset.delpin]; save(); closeSheet(); renderMarkers(); toast("Segnaposto eliminato"); }
+});
+function openPinForm(x,y){
+  openSheet(`
+    <span class="eyebrow" style="color:${CATS.mio.color}">Nuovo segnaposto</span>
+    <h3 id="sheetTitle">Segna questo punto</h3>
+    <form id="pinForm" style="display:flex;flex-direction:column;gap:10px">
+      <label for="pinName" class="eyebrow" style="color:var(--muted)">Nome</label>
+      <input id="pinName" type="text" maxlength="60" placeholder="Es. Auto rara vista qui" required>
+      <label for="pinNote" class="eyebrow" style="color:var(--muted)">Note</label>
+      <textarea id="pinNote" rows="3" maxlength="300" placeholder="Orario, cosa hai trovato…"></textarea>
+      <div class="acts"><button class="btn primary" type="submit">Salva segnaposto</button><button class="btn" type="button" data-close>Annulla</button></div>
+    </form>`);
+  $("#pinForm").addEventListener("submit", ev=>{
+    ev.preventDefault();
+    const name = $("#pinName").value.trim(); if(!name) return;
+    S.pins.push({id:"p-"+Date.now(), name, desc:$("#pinNote").value.trim(), where:"Il tuo segnaposto", x, y});
+    S.filters.mio = true; save(); renderFilters();
+    closeSheet(); renderMarkers(); toast("Segnaposto salvato");
+    if(addMode) $("#addPin").click();
+  });
+}
+
+/* ============================================================
+   GUIDA
+   ============================================================ */
+function tabs(rootSel, key, renderers, bodySel){
+  const root=$(rootSel);
+  const cur = S.tab[key] || root.querySelector("button").dataset.t;
+  root.querySelectorAll("button").forEach(b=>b.setAttribute("aria-selected", b.dataset.t===cur));
+  $(bodySel).innerHTML = renderers[cur]();
+  root.onclick = e=>{ const b=e.target.closest("button[data-t]"); if(!b) return; S.tab[key]=b.dataset.t; save(); tabs(rootSel,key,renderers,bodySel); };
+}
+const tipList = arr => `<ol class="tips">${arr.map((t,i)=>`<li><span class="n">${String(i+1).padStart(2,"0")}</span><div><b>${esc(t[0])}</b><p>${esc(t[1])}</p></div></li>`).join("")}</ol>`;
+const GUIDE = {
+  inizio: ()=>`<div style="display:flex;flex-direction:column;gap:12px"><p class="note">Consigli per le prime ore a Key Lento, quando hai solo Jason e pochi soldi.</p>${tipList(TIPS_START)}</div>`,
+  soldi: ()=>`<div style="display:flex;flex-direction:column;gap:12px">
+    <p class="note">I compensi indicati vengono dalle guide della community e possono variare.</p>
+    <div class="grid">${TIPS_MONEY.map(t=>`<div class="card"><div class="row"><span class="pill hot">${esc(t[2])}</span></div><h3>${esc(t[0])}</h3><p>${esc(t[1])}</p></div>`).join("")}</div></div>`,
+  storia: ()=>`<div class="${S.spoilers?"spoilers-on":""}" id="storyWrap" style="display:flex;flex-direction:column;gap:10px">
+    <div class="panel" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:space-between">
+      <p style="font-size:.88rem;color:var(--muted);flex:1;min-width:200px">5 capitoli e 91 missioni principali, giocate come Jason e Lucia. Le descrizioni sono sfocate per evitare spoiler.</p>
+      <button class="btn small" id="spoilBtn">${S.spoilers?"Nascondi spoiler":"Mostra spoiler"}</button>
+    </div>
+    ${CHAPTERS.map(c=>`<details class="chapter"${c.n===1?" open":""}><summary><span class="cn">${c.n}</span><span class="ct"><b>${esc(c.t)}</b><small>${esc(c.tag)}${c.count?" · "+esc(c.count):""}</small></span><span class="pill">capitolo</span></summary>
+      <div class="cb"><p class="spoiler">${esc(c.body)}</p>${c.missions.length?`<div><span class="eyebrow" style="color:var(--muted)">Missioni citate</span><div class="mission-list" style="margin-top:6px">${c.missions.map(m=>`<span class="spoiler">${esc(m)}</span>`).join("")}</div></div>`:""}</div></details>`).join("")}
+    <p class="note">Le fonti non concordano sul numero di missioni per capitolo: le cifre sono indicative.</p></div>`,
+  regioni: ()=>`<div class="grid">${REGIONS.map(r=>`<div class="card region-card"><span class="sw" style="background:${r.color}"></span>
+      <span class="eyebrow" style="color:${r.color}">${esc(r.county)}</span><h3>${esc(r.name)}</h3><p>${esc(r.desc)}</p>
+      <dl class="kv"><dt>Ispirata a</dt><dd>${esc(r.ispirazione)}</dd></dl>
+      <div class="row"><button class="btn small" data-region="${r.id}">Vedi sulla mappa</button></div></div>`).join("")}</div>`,
+  attivita: ()=>`<div class="grid">${ACTIVITIES.map(a=>`<div class="card"><h3>${esc(a[0])}</h3><p>${esc(a[1])}</p></div>`).join("")}</div>`
+};
+document.addEventListener("click", e=>{
+  if(e.target.id==="spoilBtn"){ S.spoilers=!S.spoilers; save(); renderGuide(); }
+  if(e.target.closest(".spoiler") && !S.spoilers){ e.preventDefault(); e.target.closest(".spoiler").style.filter="none"; }
+  const rb = e.target.closest("[data-region]");
+  if(rb){ const r=REGIONS.find(x=>x.id===rb.dataset.region); location.hash="mappa"; setTimeout(()=>{ T.k=2.4; T.x=VBW/2-r.x*T.k; T.y=VBH/2-r.y*T.k; clampT(); applyT(); },40); }
+  const gp = e.target.closest("[data-map]"); if(gp) focusPlace(gp.dataset.map);
+});
+function renderGuide(){ tabs("#guideTabs","guida",GUIDE,"#guideBody"); }
+
+/* ============================================================
+   TRUCCHI
+   ============================================================ */
+let cheatCat = "Tutti";
+function renderCheats(){
+  const cats = ["Tutti", ...new Set(CHEATS.map(c=>c.cat))];
+  $("#cheatFilters").innerHTML = cats.map(c=>`<button class="chip" data-cc="${c}" aria-pressed="${c===cheatCat}">${c}</button>`).join("");
+  const list = CHEATS.filter(c=>cheatCat==="Tutti"||c.cat===cheatCat);
+  $("#cheatGrid").innerHTML = list.map(c=>`<div class="card cheat">
+    <div class="row"><span class="pill">${esc(c.cat)}</span>${vPill(c.v)}</div>
+    <h3>${esc(c.name)}</h3>
+    ${c.seq?`<div class="seq" aria-label="Sequenza: ${[...c.seq].map(k=>ARROW_IT[k]).join(", ")}">${[...c.seq].map(k=>`<span class="key">${ARROW[k]}</span>`).join("")}</div>`
+           :`<div class="nocode">Sequenza non ancora documentata</div>`}
+    <p class="unlock"><b>Sblocco:</b> ${esc(c.unlock)}</p>
+    ${c.note?`<p class="unlock">${esc(c.note)}</p>`:""}
+    ${c.seq?`<div class="row"><button class="btn small" data-copy="${c.id}">Copia sequenza</button></div>`:""}
+  </div>`).join("");
+}
+$("#cheatFilters").addEventListener("click", e=>{ const b=e.target.closest("[data-cc]"); if(b){ cheatCat=b.dataset.cc; renderCheats(); } });
+$("#cheatGrid").addEventListener("click", e=>{
+  const b=e.target.closest("[data-copy]"); if(!b) return;
+  const c=CHEATS.find(x=>x.id===b.dataset.copy);
+  const txt = c.name+": "+[...c.seq].map(k=>ARROW[k]).join(" ");
+  try{ navigator.clipboard.writeText(txt).then(()=>toast("Sequenza copiata"), ()=>toast(txt)); }catch(err){ toast(txt); }
+});
+
+/* ============================================================
+   SEGRETI
+   ============================================================ */
+const placeCard = p => `<div class="card">
+  <div class="row">${p.items?`<span class="pill sea">${p.items} tesori</span>`:""}${p.missable?'<span class="pill hot">mancabile</span>':""}${p.kind?`<span class="pill">${esc(p.kind)}</span>`:""}${vPill(p.v)}</div>
+  <h3>${esc(p.name)}</h3>
+  <p><b style="color:var(--sand)">Dove:</b> ${esc(p.where)}</p>
+  <p>${esc(p.desc)}</p>
+  ${p.loot?`<p><b style="color:var(--sand)">Bottino:</b> ${esc(p.loot)}</p>`:""}
+  ${p.how?`<p><b style="color:var(--sand)">Sblocco:</b> ${esc(p.how)}</p>`:""}
+  <div class="row" style="justify-content:space-between;margin-top:4px">${checkbox(p.id)}<button class="btn small" data-map="${p.id}">Sulla mappa</button></div>
+</div>`;
+const SECRETS = {
+  relitti: ()=>`<div style="display:flex;flex-direction:column;gap:12px">
+    <div class="panel" style="display:flex;flex-direction:column;gap:8px">
+      <h3>Come funziona la caccia al tesoro</h3>
+      <ol class="tips">
+        <li><span class="n">01</span><div><b>Completa «Island Dreams»</b><p>Kenton ti chiama e mette il marker verde KR sul suo negozio a Key Lento.</p></div></li>
+        <li><span class="n">02</span><div><b>Prendi l'attrezzatura</b><p>Bombole e metal detector sono sulla barca di Jason.</p></div></li>
+        <li><span class="n">03</span><div><b>Raccogli e vendi</b><p>Porta i reperti a Kenton. In tutto sono 7 set di recupero e 33 scoperte subacquee, tutte necessarie per il 100%.</p></div></li>
+        <li><span class="n">04</span><div><b>Trofeo segreto</b><p>Dopo tutti e sette i relitti, completa la missione finale di Kenton per il bronzo «This Was No Boat Accident».</p></div></li>
+      </ol>
+    </div>
+    <div class="grid">${PLACES.filter(p=>p.cat==="relitto").map(placeCard).join("")}</div></div>`,
+  luoghi: ()=>`<div class="grid">${PLACES.filter(p=>p.cat==="segreto").map(placeCard).join("")}</div>`,
+  egg: ()=>`<div class="grid">${EGGS.map(e=>`<div class="card"><div class="row">${vPill(e.v)}</div><h3>${esc(e.name)}</h3><p>${esc(e.desc)}</p><div class="row">${checkbox(e.id,"Visto")}</div></div>`).join("")}</div>
+    <p class="note" style="margin-top:12px">Altri easter egg con posizione precisa (nido sulla torre, Skunk Ape, UFO, Trinity Apartments) sono nella scheda Luoghi segreti e sulla mappa.</p>`
+};
+function renderSecrets(){ tabs("#secretTabs","segreti",SECRETS,"#secretBody"); }
+
+/* ============================================================
+   RACCOLTA
+   ============================================================ */
+const COLL = {
+  collez: ()=>`<div style="display:flex;flex-direction:column;gap:12px">
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Tipo</th><th>Totale</th><th>Per il 100%</th><th>Ricompensa</th><th>Ne ho</th></tr></thead>
+      <tbody>${COLLECT.map(c=>`<tr>
+        <td><b>${esc(c.name)}</b>${c.note?`<br><small style="color:var(--muted)">${esc(c.note)}</small>`:""} ${c.v==="warn"?vPill("warn"):""}</td>
+        <td class="num">${c.total}</td><td class="num">${esc(c.need)}</td><td style="color:var(--muted)">${esc(c.reward)}</td>
+        <td><span class="stepper"><button data-step="${c.id}" data-d="-1" aria-label="Togli uno">−</button><output id="out-${c.id}">${S.counts[c.id]||0}/${c.total}</output><button data-step="${c.id}" data-d="1" aria-label="Aggiungi uno">+</button></span></td></tr>`).join("")}</tbody>
+    </table></div>
+    <p class="note">Tieni premuto + o − per contare più in fretta. Controlla i totali anche in gioco, in Progressi › Collezioni: le guide non sono ancora tutte allineate.</p></div>`,
+  armi: ()=>`<div class="grid">${PLACES.filter(p=>p.cat==="arma").map(placeCard).join("")}</div>`,
+  veicoli: ()=>`<div style="display:flex;flex-direction:column;gap:12px"><div class="grid">${PLACES.filter(p=>p.cat==="veicolo").map(placeCard).join("")}</div>
+    <h3>Ottenibili anche con i trucchi</h3>
+    <div class="grid">${VEHICLES_EXTRA.map(v=>`<div class="card"><h3>${esc(v.name)}</h3><p>${esc(v.note)}</p></div>`).join("")}</div>
+    <p class="note">I veicoli rari possono non comparire sempre. Per tenerli in garage serve pagare la registrazione.</p></div>`,
+  fonti: ()=>`<div class="panel" style="display:flex;flex-direction:column;gap:10px">
+    <p style="color:var(--muted);font-size:.9rem">Contenuti tradotti e riassunti in italiano da queste guide in inglese, pubblicate nei giorni successivi all'uscita. Le informazioni cambiano in fretta: in caso di dubbio controlla la fonte originale.</p>
+    <ul style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px">${SOURCES.map(s=>`<li><a href="${s[1]}" target="_blank" rel="noopener">${esc(s[0])}</a></li>`).join("")}</ul>
+    <button class="btn small" id="resetAll" style="align-self:flex-start;margin-top:8px">Azzera i miei progressi</button>
+    <div id="resetConfirm" hidden class="note">Vuoi davvero cancellare spunte, conteggi e segnaposti? <button class="btn small" id="resetYes">Sì, azzera</button> <button class="btn small" id="resetNo">Annulla</button></div>
+  </div>`
+};
+function renderColl(){ tabs("#collTabs","raccolta",COLL,"#collBody"); }
+let holdT=null;
+function step(id,d){
+  const c=COLLECT.find(x=>x.id===id);
+  S.counts[id]=Math.max(0,Math.min(c.total,(S.counts[id]||0)+d)); save();
+  const o=$("#out-"+id); if(o) o.textContent=`${S.counts[id]}/${c.total}`;
+  renderHomeProgress();
+}
+document.addEventListener("pointerdown", e=>{
+  const b=e.target.closest("[data-step]"); if(!b) return;
+  e.preventDefault();
+  const id=b.dataset.step, d=+b.dataset.d; step(id,d);
+  let n=0; clearInterval(holdT);
+  holdT=setInterval(()=>{ n++; if(n>3) step(id,d); }, 110);
+});
+["pointerup","pointercancel","pointerleave"].forEach(t=>document.addEventListener(t,()=>clearInterval(holdT)));
+document.addEventListener("click", e=>{
+  if(e.target.id==="resetAll") $("#resetConfirm").hidden=false;
+  if(e.target.id==="resetNo") $("#resetConfirm").hidden=true;
+  if(e.target.id==="resetYes"){ S.found={}; S.counts={}; S.pins=[]; save(); renderAll(); toast("Progressi azzerati"); }
+});
+
+/* ============================================================
+   RICERCA
+   ============================================================ */
+function buildIndex(){
+  const idx=[];
+  PLACES.forEach(p=>idx.push({t:p.name, s:p.where, b:[p.desc,p.loot,p.how,p.kind].join(" "), cat:CATS[p.cat].label, go:()=>focusPlace(p.id)}));
+  S.pins.forEach(p=>idx.push({t:p.name, s:"Il tuo segnaposto", b:p.desc, cat:"I miei punti", go:()=>focusPlace(p.id)}));
+  CHEATS.forEach(c=>idx.push({t:c.name, s:"Trucco · "+c.unlock, b:c.cat+" "+(c.note||""), cat:"Trucchi", go:()=>{cheatCat="Tutti"; location.hash="trucchi";}}));
+  EGGS.forEach(e=>idx.push({t:e.name, s:"Easter egg", b:e.desc, cat:"Segreti", go:()=>{S.tab.segreti="egg"; renderSecrets(); location.hash="segreti";}}));
+  COLLECT.forEach(c=>idx.push({t:c.name, s:`${c.total} in totale · 100%: ${c.need}`, b:c.reward+" "+(c.note||""), cat:"Collezionabili", go:()=>{S.tab.raccolta="collez"; renderColl(); location.hash="raccolta";}}));
+  REGIONS.forEach(r=>idx.push({t:r.name, s:r.county, b:r.desc+" "+r.ispirazione, cat:"Regioni", go:()=>{S.tab.guida="regioni"; renderGuide(); location.hash="guida";}}));
+  TIPS_START.forEach(t=>idx.push({t:t[0], s:"Primi passi", b:t[1], cat:"Guida", go:()=>{S.tab.guida="inizio"; renderGuide(); location.hash="guida";}}));
+  TIPS_MONEY.forEach(t=>idx.push({t:t[0], s:"Soldi · "+t[2], b:t[1], cat:"Guida", go:()=>{S.tab.guida="soldi"; renderGuide(); location.hash="guida";}}));
+  ACTIVITIES.forEach(t=>idx.push({t:t[0], s:"Attività", b:t[1], cat:"Guida", go:()=>{S.tab.guida="attivita"; renderGuide(); location.hash="guida";}}));
+  CHAPTERS.forEach(c=>idx.push({t:`Capitolo ${c.n}: ${c.t}`, s:c.tag, b:c.missions.join(" "), cat:"Storia", go:()=>{S.tab.guida="storia"; renderGuide(); location.hash="guida";}}));
+  return idx;
+}
+const norm = s => String(s||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
+function hl(text,q){ if(!q) return esc(text); const n=norm(text), i=n.indexOf(q); if(i<0) return esc(text); return esc(text.slice(0,i))+"<mark>"+esc(text.slice(i,i+q.length))+"</mark>"+esc(text.slice(i+q.length)); }
+let IDX=[], hits=[];
+function runSearch(){
+  const q = norm($("#q").value.trim());
+  if(!q){ $("#results").innerHTML='<p class="empty">Scrivi il nome di un luogo, un trucco, un\'arma o un collezionabile.</p>'; hits=[]; return; }
+  const terms=q.split(/\s+/);
+  hits = IDX.map(it=>{ const hay=norm(it.t+" "+it.s+" "+it.b+" "+it.cat); if(!terms.every(t=>hay.includes(t))) return null; return {it, score: norm(it.t).includes(q)?2:1}; }).filter(Boolean).sort((a,b)=>b.score-a.score).slice(0,40);
+  $("#results").innerHTML = hits.length ? hits.map((h,i)=>`<button class="res" data-hit="${i}"><span class="eyebrow">${esc(h.it.cat)}</span><b>${hl(h.it.t,q)}</b><small>${hl(h.it.s||"",q)}</small></button>`).join("")
+    : `<p class="empty">Nessun risultato per «${esc($("#q").value)}». Prova con un nome più corto.</p>`;
+}
+function openSearch(){ IDX=buildIndex(); $("#search").hidden=false; $("#q").value=""; runSearch(); setTimeout(()=>$("#q").focus(),50); }
+function closeSearch(){ $("#search").hidden=true; }
+$("#openSearch").onclick=openSearch;
+$("#closeSearch").onclick=closeSearch;
+$("#q").addEventListener("input", runSearch);
+$("#results").addEventListener("click", e=>{ const b=e.target.closest("[data-hit]"); if(!b) return; const h=hits[+b.dataset.hit]; closeSearch(); h.it.go(); });
+
+/* ============================================================
+   AVVIO
+   ============================================================ */
+function renderAll(){ renderHomeProgress(); renderFilters(); renderMarkers(); renderGuide(); renderCheats(); renderSecrets(); renderColl(); }
+drawBase(); renderAll(); route();
+
+if("serviceWorker" in navigator && /^https?:$/.test(location.protocol) && !/claude/.test(location.hostname)){
+  try{ navigator.serviceWorker.register("sw.js").catch(()=>{}); }catch(e){}
+}
+})();
+</script>
