@@ -349,7 +349,7 @@ footer.legal{font-size:.75rem;color:var(--muted);border-top:1px solid var(--line
   <div class="chips" id="mapFilters" role="group" aria-label="Filtra i segnaposti"></div>
   <div class="map-wrap">
     <div class="map-box" id="mapBox">
-      <svg id="map" viewBox="0 0 1000 1300" preserveAspectRatio="xMidYMid meet" aria-label="Mappa schematica di Leonida">
+      <svg id="map" viewBox="0 0 1000 1369" preserveAspectRatio="xMidYMid meet" aria-label="Mappa schematica di Leonida">
         <defs>
           <radialGradient id="gSea" cx="60%" cy="40%" r="80%"><stop offset="0" stop-color="#164a66"/><stop offset="1" stop-color="#0b2536"/></radialGradient>
           <linearGradient id="gLand" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2f4a3a"/><stop offset=".55" stop-color="#33473a"/><stop offset="1" stop-color="#2c4a44"/></linearGradient>
@@ -371,7 +371,7 @@ footer.legal{font-size:.75rem;color:var(--muted);border-top:1px solid var(--line
         <button class="icon-btn" id="zReset" aria-label="Mostra tutta la mappa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
         <button class="icon-btn" id="addPin" aria-pressed="false" aria-label="Aggiungi un tuo segnaposto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 21s-6-5.5-6-11a6 6 0 0 1 12 0c0 5.5-6 11-6 11z"/><path d="M12 7v6M9 10h6" stroke-linecap="round"/></svg></button>
       </div>
-      <div class="map-hint" id="mapHint">Posizioni indicative · mappa schematica</div>
+      <div class="map-hint" id="mapHint">Mappa schematica</div>
     </div>
     <aside class="panel" aria-label="Elenco dei luoghi">
       <div class="sec-head" style="margin-bottom:8px"><h3>Luoghi visibili</h3><span class="pill" id="mapCount">0</span></div>
@@ -483,105 +483,105 @@ const CATS = {
 };
 
 const REGIONS = [
-  {id:"kalaga", name:"Mount Kalaga National Park", short:"MOUNT KALAGA", x:600, y:200, county:"Lummox County", color:"#5fe39a",
+  {id:"kalaga", name:"Mount Kalaga National Park", short:"MOUNT KALAGA", x:497, y:290, county:"Lummox County", color:"#5fe39a",
    ispirazione:"Il nord selvaggio della Florida, foreste e parchi naturali",
    desc:"Il nord boscoso di Leonida: fiumi, sentieri, aree di caccia e le alture del parco nazionale. È il posto dei misteri: torri panoramiche, un meteorite lungo il sentiero e un cerchio di pietre in cima."},
-  {id:"gellhorn", name:"Port Gellhorn", short:"PORT GELLHORN", x:205, y:330, county:"Kelly County (secondo alcune fonti)", color:"#ffa24a",
+  {id:"gellhorn", name:"Port Gellhorn", short:"PORT GELLHORN", x:298, y:446, county:"Kelly County", color:"#ffa24a",
    ispirazione:"Le cittadine portuali del Golfo e della Panhandle",
    desc:"Città portuale sul Golfo, un po' decaduta. Qui si svolge buona parte del Capitolo 2 con Lucia. Ospita il Kingpin Bowling e, di notte, qualcosa di strano nei boschi."},
-  {id:"ambrosia", name:"Ambrosia", short:"AMBROSIA", x:585, y:470, county:"Kelly County (secondo alcune fonti)", color:"#ffcf5a",
+  {id:"ambrosia", name:"Ambrosia", short:"AMBROSIA", x:558, y:461, county:"Kelly County (secondo alcune fonti)", color:"#ffcf5a",
    ispirazione:"Clewiston e la zona del lago Okeechobee",
    desc:"Il cuore agricolo e industriale di Leonida, attorno al grande lago. Campi, raffinerie di zucchero, strade lunghe e dritte e qualche garage interessante."},
-  {id:"grass", name:"Grassrivers", short:"GRASSRIVERS", x:590, y:870, county:"Mariana County", color:"#3ee6cf",
+  {id:"grass", name:"Grassrivers", short:"GRASSRIVERS", x:425, y:898, county:"Mariana County", color:"#3ee6cf",
    ispirazione:"Le Everglades",
    desc:"Paludi a perdita d'occhio, airboat e alligatori. Il paese di Hamlet è il punto di riferimento; a sud c'è il Cottonmouth Lake, dove si aggira lo Skunk Ape."},
-  {id:"vice", name:"Vice City", short:"VICE CITY", x:790, y:905, county:"Vice-Dale County", color:"#ff4f8b",
+  {id:"vice", name:"Vice City", short:"VICE CITY", x:691, y:651, county:"Vice-Dale County", color:"#ff4f8b",
    ispirazione:"Miami e Miami Beach",
    desc:"La metropoli al centro di tutto: Vice Beach, lo skyline, le isole esclusive come Starfish Island e l'aeroporto principale. Dal Capitolo 3 la storia si sposta qui."},
-  {id:"keys", name:"Leonida Keys", short:"LEONIDA KEYS", x:430, y:1110, county:"Mariana County", color:"#9d8cff",
+  {id:"keys", name:"Leonida Keys", short:"LEONIDA KEYS", x:372, y:1286, county:"Mariana County", color:"#9d8cff",
    ispirazione:"Le Florida Keys",
    desc:"La catena di isole a sud dove inizia l'avventura di Jason. Key Lento è la base del Capitolo 1: casa di Jason, il negozio di Kenton e le acque piene di relitti spagnoli."}
 ];
 
-/* Punti mappa. x,y nel sistema 1000×1300 della mappa schematica. */
+/* Punti mappa. x,y nel sistema 1000×1369 (proporzioni della mappa ufficiale). */
 const PLACES = [
   // ---- relitti (Kenton's Treasures) ----
-  {id:"w-ocio", cat:"relitto", name:"Nuestra Señora del Ocio", where:"Est di Key Lento, oltre l'isolotto a nord-est del negozio di Kenton", x:700, y:1128, v:"ok",
+  {id:"w-ocio", cat:"relitto", name:"Nuestra Señora del Ocio", where:"Est di Key Lento, oltre l'isolotto a nord-est del negozio di Kenton", x:646, y:1103, v:"ok",
    items:10, loot:"10 dobloni", how:"Si scopre automaticamente durante la missione della storia «Island Dreams». Dopo la missione Kenton ti chiama e compare il marker verde KR a Key Lento.",
    desc:"Il relitto-tutorial: ti insegna l'immersione con bombole e metal detector. Raccogli tutti i 10 dobloni sul fondale."},
-  {id:"w-noche", cat:"relitto", name:"Nuestra Señora de la Noche", where:"Sud-est della punta di Key Lento", x:655, y:1222, v:"ok",
+  {id:"w-noche", cat:"relitto", name:"Nuestra Señora de la Noche", where:"Sud-est della punta di Key Lento", x:537, y:1217, v:"ok",
    items:7, loot:"7 reperti, tra cui un guanto d'arme in peltro e un doblone macchiato",
    desc:"Galeone affondato a sud-est di Key Lento. È uno dei siti più ricchi del primo giro di immersioni."},
-  {id:"w-etica", cat:"relitto", name:"Nuestra Señora de la Ética Laxa", where:"Sul fondale a sud di Key Lento e di Abismo Key", x:555, y:1250, v:"ok",
+  {id:"w-etica", cat:"relitto", name:"Nuestra Señora de la Ética Laxa", where:"Sul fondale a sud di Key Lento e di Abismo Key", x:478, y:1243, v:"ok",
    items:5, loot:"5 reperti",
    desc:"Relitto in acque più profonde fra Key Lento e Abismo Key. Tieni d'occhio l'ossigeno."},
-  {id:"w-sierra", cat:"relitto", name:"Urca de Santa Sierra", where:"Est di Key Lento", x:735, y:1172, v:"warn",
+  {id:"w-sierra", cat:"relitto", name:"Urca de Santa Sierra", where:"Est di Key Lento", x:664, y:1142, v:"warn",
    items:6, loot:"6 reperti, tra cui la campana della Santa Sierra e un orologio da tasca decorato",
    desc:"Secondo alcune guide diventa disponibile più avanti nella sequenza di Kenton."},
-  {id:"w-torres", cat:"relitto", name:"Urca de Cinco Torres", where:"Al largo della costa sud-est di Key Lento, vicino a un gruppo di isolotti verdi", x:690, y:1200, v:"warn",
+  {id:"w-torres", cat:"relitto", name:"Urca de Cinco Torres", where:"Al largo della costa sud-est di Key Lento, vicino a un gruppo di isolotti verdi", x:600, y:1177, v:"warn",
    items:null, loot:"Numero di reperti non ancora confermato",
    desc:"Uno dei due relitti vicino agli isolotti verdi a sud-est di Key Lento."},
-  {id:"w-lujuriosa", cat:"relitto", name:"Nuestra Señora Lujuriosa", where:"Costa sud-est di Key Lento, vicino agli isolotti verdi", x:715, y:1235, v:"warn",
+  {id:"w-lujuriosa", cat:"relitto", name:"Nuestra Señora Lujuriosa", where:"Costa sud-est di Key Lento, vicino agli isolotti verdi", x:624, y:1198, v:"warn",
    items:null, loot:"Numero di reperti non ancora confermato",
    desc:"Si trova vicino all'Urca de Cinco Torres: conviene farli nella stessa uscita in barca."},
-  {id:"w-meer", cat:"relitto", name:"Relitto del Meerwunder", where:"Featherstone Islands", x:318, y:712, v:"warn",
+  {id:"w-meer", cat:"relitto", name:"Relitto del Meerwunder", where:"Featherstone Islands, a nord-ovest (Lummox County)", x:345, y:234, v:"warn",
    items:null, loot:"3 Cocaine Flamingo sulla spiaggia vicina",
    desc:"Relitto lontano dalle Keys. Prima di immergerti, fai il giro della spiaggia: ci sono tre Cocaine Flamingo da raccogliere."},
 
   // ---- segreti / easter egg ----
-  {id:"s-egg", cat:"segreto", name:"Il nido di uova dipinte", where:"In cima a una torre radio di Vice City", x:770, y:845, v:"ok",
+  {id:"s-egg", cat:"segreto", name:"Il nido di uova dipinte", where:"In cima a una torre radio di Vice City", x:646, y:691, v:"ok",
    desc:"Un vero easter egg: un nido di uova colorate in cima a una gigantesca torre per le telecomunicazioni. La salita richiede circa sette minuti. Se lanci un uovo, parte una breve scena in cui finisce sul parabrezza di un agente immobiliare."},
-  {id:"s-skunk", cat:"segreto", name:"Lo Skunk Ape", where:"Cottonmouth Lake, a sud di Hamlet (Grassrivers)", x:548, y:880, v:"ok",
+  {id:"s-skunk", cat:"segreto", name:"Lo Skunk Ape", where:"Cottonmouth Lake, a sud di Hamlet (Grassrivers)", x:505, y:1039, v:"ok",
    desc:"Il Bigfoot delle paludi. Lo si può sorprendere mentre divora un cervo su una strada sterrata vicino al lago. È uno dei primi segreti trovati dai giocatori."},
-  {id:"s-ufo", cat:"segreto", name:"Rapimento UFO", where:"Boschi vicino a Port Gellhorn, dopo le 2:00 di notte", x:280, y:285, v:"warn",
+  {id:"s-ufo", cat:"segreto", name:"Rapimento UFO", where:"Boschi vicino a Port Gellhorn, dopo le 2:00 di notte", x:383, y:481, v:"warn",
    desc:"Un'auto con le luci tremolanti ti guida nel bosco dopo le 2:00 (ora di gioco). Sarebbe legato al trofeo nascosto «The Truth Is Out There». Segnalato ma non ancora confermato da tutte le fonti."},
-  {id:"s-dexter", cat:"segreto", name:"Trinity Apartments", where:"Washington Island, Vice City", x:888, y:935, v:"ok",
+  {id:"s-dexter", cat:"segreto", name:"Trinity Apartments", where:"Washington Island, Vice City", x:830, y:595, v:"ok",
    desc:"Rockstar ha ricreato il palazzo in cui vive Dexter nella serie TV, ribattezzato Trinity Apartments. Il nome è un omaggio al «Trinity Killer»."},
-  {id:"s-tower", cat:"segreto", name:"Torre con codice 69185", where:"In cima al Mount Kalaga", x:640, y:165, v:"warn",
+  {id:"s-tower", cat:"segreto", name:"Torre con codice 69185", where:"In cima al Mount Kalaga", x:505, y:324, v:"warn",
    desc:"Arrampicati sulla torre in vetta: su una lavagna c'è scritto il codice 69185. Alcuni lo collegano a un bunker segreto, ma il suo scopo non è confermato."},
-  {id:"s-meteor", cat:"segreto", name:"Meteorite e cerchio di pietre", where:"Sentiero e vetta del Mount Kalaga", x:575, y:225, v:"warn",
+  {id:"s-meteor", cat:"segreto", name:"Meteorite e cerchio di pietre", where:"Sentiero e vetta del Mount Kalaga", x:473, y:353, v:"warn",
    desc:"A metà sentiero c'è un meteorite schiantato; in cima, un cerchio di pietre con qualcosa che somiglia a una meridiana. I frammenti di meteorite sono anche un tipo di collezionabile."},
-  {id:"s-statue", cat:"segreto", name:"La statua di Manifest Canyon", where:"Manifest Canyon", x:470, y:255, v:"warn",
+  {id:"s-statue", cat:"segreto", name:"La statua di Manifest Canyon", where:"Manifest Canyon", x:391, y:393, v:"warn",
    desc:"Avvicinandoti alla statua il controller vibra e si sentono strani bip. Segnalazione della community ancora da verificare."},
-  {id:"s-bunker", cat:"segreto", name:"Bunker militare (voce)", where:"Versante ovest del Mount Kalaga", x:500, y:232, v:"warn",
+  {id:"s-bunker", cat:"segreto", name:"Bunker militare (voce)", where:"Versante ovest del Mount Kalaga", x:428, y:343, v:"warn",
    desc:"Una sola fonte parla di un bunker con porta d'acciaio che richiederebbe una tessera da Port Gellhorn e conterrebbe un jetpack prototipo. Nessuna conferma: prendila come una pista, non come un fatto."},
 
   // ---- armi uniche ----
-  {id:"a-kz59", cat:"arma", name:"Drug Mule KZ-59", kind:"Fucile d'assalto", where:"Sott'acqua, al largo della costa nord delle Riquezas Keys", x:420, y:1180, v:"ok",
+  {id:"a-kz59", cat:"arma", name:"Drug Mule KZ-59", kind:"Fucile d'assalto", where:"Sott'acqua, al largo della costa nord delle Riquezas Keys", x:223, y:1108, v:"ok",
    desc:"Variante unica del fucile d'assalto, nascosta sul fondale. Serve l'attrezzatura da sub."},
-  {id:"a-swamp", cat:"arma", name:"Swamp Bait Akulus", kind:"Revolver", where:"Capanno diroccato nella palude di Pelican Valley", x:470, y:820, v:"ok",
+  {id:"a-swamp", cat:"arma", name:"Swamp Bait Akulus", kind:"Revolver", where:"Capanno diroccato nella palude di Pelican Valley", x:518, y:1015, v:"ok",
    desc:"Revolver unico in una baracca in rovina nelle paludi."},
-  {id:"a-hobo", cat:"arma", name:"Hobo «Marabunta Grande»", kind:"Fucile a pompa", where:"Hamlet Storage, dietro all'Hamlet Pawn (Grassrivers)", x:585, y:795, v:"ok",
+  {id:"a-hobo", cat:"arma", name:"Hobo «Marabunta Grande»", kind:"Fucile a pompa", where:"Hamlet Storage, dietro all'Hamlet Pawn (Grassrivers)", x:550, y:948, v:"ok",
    desc:"In una valigetta aperta nel deposito. Entra dall'ingresso sul retro dell'edificio dietro al banco dei pegni di Hamlet."},
-  {id:"a-assassin", cat:"arma", name:"Assassin Nipper .38", kind:"Pistola", where:"Permit Keys, botola nel relitto di una barca-spia", x:770, y:1100, v:"ok",
+  {id:"a-assassin", cat:"arma", name:"Assassin Nipper .38", kind:"Pistola", where:"Permit Keys, botola nel relitto di una barca-spia", x:372, y:1161, v:"ok",
    desc:"Nascosta in una botola sul pavimento di una barca-spia naufragata."},
-  {id:"a-turnt", cat:"arma", name:"Turnt Nipper .38", kind:"Pistola", where:"Bobcat Bight, in un parapendio incastrato su un albero", x:735, y:290, v:"warn",
+  {id:"a-turnt", cat:"arma", name:"Turnt Nipper .38", kind:"Pistola", where:"Bobcat Bight, in un parapendio incastrato su un albero", x:291, y:823, v:"warn",
    desc:"Pende da un parapendio schiantato fra i rami. Le fonti non concordano sul punto esatto."},
-  {id:"a-gutter", cat:"arma", name:"Gutterball Moreland 850", kind:"Fucile", where:"Kingpin Bowling, Port Gellhorn — sul tavolo da biliardo", x:228, y:352, v:"ok",
+  {id:"a-gutter", cat:"arma", name:"Gutterball Moreland 850", kind:"Fucile", where:"Kingpin Bowling, Port Gellhorn — sul tavolo da biliardo", x:318, y:505, v:"ok",
    desc:"In una custodia appoggiata sul tavolo da biliardo del bowling."},
-  {id:"a-scrapper", cat:"arma", name:"Scrapper VF5C", kind:"Arma unica", where:"Ultimo piano del La Cascara Motel, durante la rapina Kolt & Associates", x:268, y:392, v:"warn",
+  {id:"a-scrapper", cat:"arma", name:"Scrapper VF5C", kind:"Arma unica", where:"Ultimo piano del La Cascara Motel, durante la rapina Kolt & Associates (posizione indicativa)", x:332, y:534, v:"warn",
    desc:"Si prende solo durante la rapina: sali all'ultimo piano del motel prima di andartene."},
-  {id:"a-donnie", cat:"arma", name:"H&L .38 di Donnie", kind:"Pistola", where:"Bagagliaio dell'auto di Donnie, missione «Don Gone» (Cap. 1)", x:585, y:1150, v:"ok", missable:true,
+  {id:"a-donnie", cat:"arma", name:"H&L .38 di Donnie", kind:"Pistola", where:"Bagagliaio dell'auto di Donnie, missione «Don Gone» (Cap. 1)", x:587, y:1125, v:"ok", missable:true,
    desc:"Mancabile! Aprila dal bagagliaio prima che l'auto venga distrutta durante la missione."},
 
   // ---- veicoli rari ----
-  {id:"c-ruiner", cat:"veicolo", name:"Ruiner Turbo", where:"Casa a est dell'abitazione di Key Lento", x:640, y:1160, v:"warn",
+  {id:"c-ruiner", cat:"veicolo", name:"Ruiner Turbo", where:"Casa a est dell'abitazione di Key Lento", x:603, y:1113, v:"warn",
    desc:"Compare parcheggiata davanti a una casa poco a est della base di Key Lento. Può non essere sempre presente."},
-  {id:"c-elegy", cat:"veicolo", name:"Elegy (stile Skyline)", where:"Villa sorvegliata su Starfish Island", x:858, y:878, v:"warn",
+  {id:"c-elegy", cat:"veicolo", name:"Elegy (stile Skyline)", where:"Villa sorvegliata su Starfish Island", x:786, y:702, v:"warn",
    desc:"Nel vialetto di una villa con le guardie: entra in silenzio o preparati a una fuga."},
-  {id:"c-gauntlet", cat:"veicolo", name:"Gauntlet «Copperhead»", where:"In un garage ad Ambrosia", x:545, y:520, v:"warn",
+  {id:"c-gauntlet", cat:"veicolo", name:"Gauntlet «Copperhead»", where:"In un garage ad Ambrosia", x:547, y:505, v:"warn",
    desc:"Muscle car in un garage della zona di Ambrosia. Ricordati il costo di registrazione per tenerla."},
 
   // ---- negozi e basi ----
-  {id:"b-jason", cat:"servizio", name:"Casa di Jason", where:"Key Lento", x:590, y:1168, v:"ok",
+  {id:"b-jason", cat:"servizio", name:"Casa di Jason", where:"Key Lento", x:571, y:1138, v:"ok",
    desc:"Base del Capitolo 1. Qui ci sono gli attrezzi per gli allenamenti, il primo punto di meditazione (mancabile!) e Dolores, il serpente di Jason: nutrirlo dà una spinta iniziale alla Concentrazione. Nella camera da letto puoi nascondere i contanti."},
-  {id:"b-kenton", cat:"servizio", name:"Negozio di Kenton", where:"Key Lento", x:618, y:1148, v:"ok",
+  {id:"b-kenton", cat:"servizio", name:"Negozio di Kenton", where:"Key Lento", x:591, y:1116, v:"ok",
    desc:"Il cacciatore di tesori che compra i reperti dei relitti. Dopo «Island Dreams» ti affida le immersioni. Il primo relitto completo vale circa 1.400 $."},
-  {id:"b-ammu", cat:"servizio", name:"Ammu-Nation di Key Lento", where:"Key Lento", x:603, y:1183, v:"ok",
+  {id:"b-ammu", cat:"servizio", name:"Ammu-Nation di Key Lento", where:"Key Lento", x:557, y:1152, v:"ok",
    desc:"Il primo negozio d'armi, disponibile subito dopo il tutorial. Compra presto un silenziatore e il giubbotto antiproiettile."},
-  {id:"b-boat", cat:"servizio", name:"Barca di Jason", where:"Pontile di Key Lento", x:572, y:1150, v:"ok",
+  {id:"b-boat", cat:"servizio", name:"Barca di Jason", where:"Pontile di Key Lento", x:539, y:1164, v:"ok",
    desc:"A bordo trovi l'attrezzatura da sub e il metal detector per le immersioni."},
-  {id:"b-king", cat:"servizio", name:"Capanni Kingfisher", where:"Leonida Keys", x:510, y:1170, v:"warn",
+  {id:"b-king", cat:"servizio", name:"Capanni Kingfisher", where:"Leonida Keys (posizione indicativa)", x:523, y:1105, v:"warn",
    desc:"Operazione illegale nei capanni dei pescatori. Svuotata del tutto può fruttare 1.000–2.000 $ o più."}
 ];
 
@@ -910,15 +910,18 @@ function renderHomeProgress(){
    MAPPA
    ============================================================ */
 const svg = $("#map"), vp = $("#vp");
-const VBW=1000; let VBH=1300;
+const VBW=1000; let VBH=1369;
 const MYMAP = {url:null, w:0, h:0};
 if(!S.cpos) S.cpos={};
 const custom = ()=>!!(S.useCustom && MYMAP.url);
+const OFFICIAL_RATIO = 2576/1882, BASE_H = Math.round(1000*OFFICIAL_RATIO);
+// L'immagine caricata ha le proporzioni della mappa ufficiale? Allora i segnaposti combaciano già.
+const isOfficial = ()=>custom() && Math.abs(MYMAP.h/MYMAP.w - OFFICIAL_RATIO) < 0.01;
 let T = {k:1, x:0, y:0};
 const MIN_K=.8, MAX_K=7;
 
 function drawBase(){
-  VBH = custom() ? Math.round(VBW*MYMAP.h/MYMAP.w) : 1300;
+  VBH = custom() ? Math.round(VBW*MYMAP.h/MYMAP.w) : BASE_H;
   svg.setAttribute("viewBox", `0 0 ${VBW} ${VBH}`);
   $("#mapBox").classList.toggle("custom", custom());
   $("#seaBg").style.display = custom() ? "none" : "";
@@ -927,53 +930,93 @@ function drawBase(){
     $("#mapLabels").innerHTML = "";
     return;
   }
-  const coast = "M 70 150 C 300 110, 600 90, 900 100 C 945 200, 940 320, 910 430 C 885 540, 878 640, 862 740 C 852 820, 852 900, 822 980 C 792 1040, 722 1070, 642 1060 C 572 1050, 502 1000, 472 940 C 442 870, 430 800, 400 730 C 370 660, 345 580, 330 500 C 322 440, 300 405, 250 398 C 190 392, 120 372, 82 322 C 56 272, 56 200, 70 150 Z";
-  const keys = [[770,1085,26,9,-25],[728,1112,30,10,-20],[690,1140,22,8,-15],[640,1160,52,16,-12],[600,1168,34,12,-8],[545,1200,24,9,-5],[505,1178,30,10,-4],[455,1196,26,9,0],[418,1206,32,11,4],[370,1222,26,9,8],[330,1236,20,8,10],[700,1205,10,6,0],[722,1222,8,5,0],[688,1225,7,5,0],[300,700,22,9,30],[330,724,14,7,20]];
-  const isl = keys.map(([x,y,rx,ry,r])=>`<ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${ry}" transform="rotate(${r} ${x} ${y})" fill="url(#gLand)" stroke="#e8d9b0" stroke-opacity=".55" stroke-width="2"/>`).join("");
-  $("#mapBase").innerHTML = `
-    <path d="${coast}" fill="none" stroke="#3ee6cf" stroke-opacity=".12" stroke-width="26"/>
-    <path d="${coast}" fill="url(#gLand)" stroke="#e8d9b0" stroke-opacity=".7" stroke-width="3" filter="url(#fShadow)"/>
-    <path d="M 120 170 C 330 130, 640 110, 880 125 C 905 210, 900 290, 880 330 C 700 330, 480 330, 330 360 C 250 330, 160 300, 110 250 Z" fill="url(#pPine)"/>
-    <path d="M 450 760 C 520 720, 690 720, 800 760 C 820 840, 790 950, 760 1010 C 690 1050, 580 1040, 520 990 C 480 930, 450 850, 450 760 Z" fill="url(#pSwamp)"/>
-    <path d="M 745 830 C 790 815, 835 830, 845 870 C 845 920, 830 960, 800 975 C 760 975, 735 940, 730 900 C 728 870, 732 845, 745 830 Z" fill="url(#pCity)"/>
-    <path d="M 150 300 C 190 290, 250 300, 290 330 C 290 360, 270 385, 240 388 C 200 385, 160 370, 140 340 Z" fill="url(#pCity)"/>
-    <ellipse cx="640" cy="560" rx="88" ry="70" fill="#1c5a72" stroke="#3ee6cf" stroke-opacity=".35" stroke-width="2"/>
-    <path d="M 640 490 C 630 420, 660 360, 640 300 C 620 250, 650 210, 640 170" fill="none" stroke="#1c5a72" stroke-width="5" stroke-linecap="round"/>
-    <path d="M 610 625 C 600 690, 620 740, 600 800" fill="none" stroke="#1c5a72" stroke-width="4" stroke-linecap="round"/>
-    <path d="M 230 395 C 260 460, 300 520, 340 560" fill="none" stroke="#1c5a72" stroke-width="3" stroke-linecap="round" opacity=".7"/>
-    <path d="M 880 820 C 892 850, 895 900, 885 950 L 878 950 C 885 900, 884 852, 872 822 Z" fill="url(#gLand)" stroke="#e8d9b0" stroke-opacity=".6" stroke-width="1.5"/>
-    <ellipse cx="858" cy="878" rx="9" ry="6" fill="url(#gLand)" stroke="#e8d9b0" stroke-opacity=".6" stroke-width="1.5"/>
-    <ellipse cx="888" cy="935" rx="7" ry="9" fill="url(#gLand)" stroke="#e8d9b0" stroke-opacity=".6" stroke-width="1.5"/>
-    ${isl}
-    <g fill="none" stroke="#f6ede4" stroke-opacity=".28" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 0">
-      <path d="M 870 140 C 880 330, 860 600, 830 880"/>
-      <path d="M 220 360 C 380 420, 520 440, 600 480 C 700 560, 760 720, 790 880"/>
-      <path d="M 790 900 C 700 870, 560 820, 470 760 C 430 700, 380 560, 330 430"/>
-      <path d="M 780 990 C 770 1040, 760 1070, 770 1085 L 728 1112 L 690 1140 L 640 1160 L 600 1168 L 545 1200 L 505 1178 L 455 1196 L 418 1206 L 370 1222" stroke-dasharray="6 7" stroke-opacity=".35"/>
+  // Geografia ricalcata in forma semplificata sulla mappa ufficiale (coordinate in pixel 1882×2576, scalate a 1000 di larghezza)
+  const sm = pts => { // curva chiusa morbida (Catmull-Rom → Bézier)
+    const n=pts.length; let d=`M ${pts[0][0]} ${pts[0][1]}`;
+    for(let i=0;i<n;i++){ const p0=pts[(i-1+n)%n],p1=pts[i],p2=pts[(i+1)%n],p3=pts[(i+2)%n];
+      d+=` C ${(p1[0]+(p2[0]-p0[0])/6).toFixed(1)} ${(p1[1]+(p2[1]-p0[1])/6).toFixed(1)}, ${(p2[0]-(p3[0]-p1[0])/6).toFixed(1)} ${(p2[1]-(p3[1]-p1[1])/6).toFixed(1)}, ${p2[0]} ${p2[1]}`; }
+    return d+" Z"; };
+  const open = pts => "M "+pts.map(p=>p.join(" ")).join(" L ");
+  const main = sm([[800,430],[870,365],[960,345],[1060,335],[1140,340],[1200,385],[1245,470],[1275,570],[1330,670],[1375,790],[1410,900],[1430,1000],[1400,1080],[1385,1200],[1405,1320],[1400,1420],[1380,1520],[1290,1600],[1225,1720],[1180,1840],[1120,1920],[1075,2000],[1000,2025],[910,2005],[820,1965],[720,1905],[650,1800],[595,1715],[560,1640],[528,1545],[495,1445],[465,1380],[480,1280],[508,1195],[505,1080],[495,990],[488,915],[540,855],[585,795],[640,665],[690,560],[745,480]]);
+  const isles = [
+    [[1170,1985],[1185,2030],[1140,2085],[1090,2140],[1020,2195],[955,2240],[930,2225],[975,2180],[1050,2120],[1110,2060],[1150,2000]], // Key Lento
+    [[750,2285],[820,2275],[890,2288],[880,2305],[810,2312],[745,2300]], // Abismo Key
+    [[825,2200],[860,2195],[875,2220],[845,2235],[820,2225]], // Maroon Key
+    [[430,2135],[520,2105],[590,2150],[600,2230],[560,2290],[470,2295],[430,2250],[420,2180]], // Mile Zero
+    [[375,2090],[420,2070],[440,2120],[410,2190],[370,2210],[355,2160]], // Riquezas
+    [[675,2150],[715,2140],[735,2170],[705,2200],[670,2190]], // Permit Keys
+    [[400,760],[460,735],[530,745],[540,790],[480,810],[410,805]], // Draper Island
+    [[650,395],[700,370],[760,390],[770,450],[730,495],[670,480]], // Featherstone
+    [[500,600],[560,580],[600,610],[575,650],[520,655]], // Zephyr
+    [[990,290],[1080,280],[1150,300],[1120,325],[1030,325]], // Hyde Island
+    [[1200,360],[1260,350],[1300,410],[1280,470],[1225,455]], // Frampton
+    [[1500,1040],[1580,1060],[1630,1180],[1655,1330],[1650,1450],[1610,1500],[1555,1470],[1525,1330],[1505,1180]], // Vice Beach
+    [[1400,1070],[1460,1060],[1490,1100],[1460,1145],[1405,1135]], // Leaf Links
+    [[1560,1500],[1620,1505],[1650,1550],[1610,1585],[1560,1565]], // Dalton Island
+    [[1400,1570],[1470,1560],[1500,1600],[1450,1625],[1395,1610]], // Gloriana Key
+    [[400,930],[455,920],[470,975],[430,1000],[395,975]], // Wild Hog Point
+    [[290,1000],[320,995],[330,1100],[305,1110],[285,1050]], // Sandbars
+    [[310,1120],[360,1110],[375,1150],[330,1165]], // Crude Islands
+    [[315,1380],[345,1360],[365,1450],[350,1520],[320,1510],[325,1450]], // Belpoint
+    [[1455,615],[1475,610],[1480,700],[1455,720]], // Little Hardin
+    [[1465,1310],[1490,1312],[1492,1340],[1462,1338]], // Starfish
+    [[1540,1100],[1585,1100],[1585,1130],[1540,1130]] // Washington Island
+  ];
+  const causeway = [[1180,1990],[1230,1880],[1290,1760],[1350,1660],[1420,1610]];
+  const r = v=>Math.round(v*1000/1882);
+  $("#mapBase").innerHTML = `<g transform="scale(${(1000/1882).toFixed(5)})">
+    <path d="${main}" fill="none" stroke="#3ee6cf" stroke-opacity=".12" stroke-width="48"/>
+    <path d="${main}" fill="url(#gLand)" stroke="#e8d9b0" stroke-opacity=".7" stroke-width="5" filter="url(#fShadow)"/>
+    ${isles.map(p=>`<path d="${sm(p)}" fill="url(#gLand)" stroke="#e8d9b0" stroke-opacity=".6" stroke-width="3.5"/>`).join("")}
+    <path d="${sm([[700,500],[880,470],[1100,480],[1180,560],[1150,700],[1000,760],[800,780],[680,720],[650,600]])}" fill="url(#pPine)"/>
+    <path d="${sm([[620,1580],[760,1560],[900,1600],[1000,1700],[1050,1850],[1020,1980],[880,1990],[740,1900],[640,1780],[600,1680]])}" fill="url(#pSwamp)"/>
+    <path d="${sm([[820,1150],[920,1140],[960,1210],[900,1270],[820,1250]])}" fill="url(#pSwamp)"/>
+    <path d="${sm([[1190,1150],[1330,1130],[1400,1220],[1400,1420],[1350,1520],[1240,1540],[1180,1440],[1170,1300]])}" fill="url(#pCity)"/>
+    <path d="${sm([[1520,1080],[1600,1100],[1640,1300],[1620,1460],[1560,1450],[1530,1250]])}" fill="url(#pCity)"/>
+    <path d="${sm([[500,870],[600,860],[630,960],[600,1040],[520,1030],[495,950]])}" fill="url(#pCity)"/>
+    <path d="${sm([[470,1300],[560,1290],[575,1380],[520,1430],[470,1400]])}" fill="url(#pCity)"/>
+    <path d="${sm([[1000,1700],[1110,1690],[1130,1790],[1060,1830],[990,1790]])}" fill="url(#pCity)"/>
+    <path d="${sm([[1180,990],[1290,980],[1310,1050],[1200,1065]])}" fill="url(#pCity)"/>
+    <path d="${sm([[1010,870],[1080,870],[1085,960],[1010,960]])}" fill="url(#pCity)"/>
+    <ellipse cx="1110" cy="820" rx="95" ry="85" fill="#1c5a72" stroke="#3ee6cf" stroke-opacity=".35" stroke-width="3"/>
+    <ellipse cx="955" cy="1975" rx="28" ry="16" fill="#1c5a72"/>
+    <rect x="930" y="1395" width="220" height="100" rx="18" fill="#3a3a4a" fill-opacity=".6" transform="rotate(8 1040 1445)"/>
+    <path d="M 950 1420 L 1130 1440 M 960 1460 L 1120 1475" stroke="#f6ede4" stroke-opacity=".45" stroke-width="7"/>
+    <g fill="none" stroke="#f6ede4" stroke-opacity=".28" stroke-width="5" stroke-linecap="round">
+      <path d="${open([[1130,400],[1220,520],[1300,650],[1350,780],[1390,1000],[1340,1200],[1300,1350],[1300,1560],[1240,1700],[1150,1900]])}"/>
+      <path d="${open([[560,830],[600,960],[600,1100],[580,1300],[560,1350]])}"/>
+      <path d="${open([[600,1300],[800,1320],[950,1310],[1100,1300],[1250,1330]])}"/>
+      <path d="${open([[1030,700],[1050,850],[1040,1000],[1040,1150],[1050,1300],[1080,1500],[1100,1700],[1130,1850]])}"/>
+      <path d="${open([[760,1180],[700,1250],[660,1340],[620,1400]])}"/>
+      <path d="${open([[1150,1950],[1060,2110],[950,2240],[880,2280],[760,2290],[640,2260],[560,2220]])}" stroke-dasharray="10 10" stroke-opacity=".35"/>
+      <path d="${open(causeway)}" stroke-dasharray="10 10" stroke-opacity=".35"/>
     </g>
+  </g>
     <g fill="none" stroke="#f6ede4" stroke-opacity=".07" stroke-width="1">
-      ${Array.from({length:12},(_,i)=>`<path d="M ${i*100} -100 V 1400"/>`).join("")}
+      ${Array.from({length:11},(_,i)=>`<path d="M ${i*100} -100 V 1500"/>`).join("")}
       ${Array.from({length:15},(_,i)=>`<path d="M -100 ${i*100} H 1100"/>`).join("")}
     </g>
-    <text x="40" y="1060" class="map-sub" font-size="15" letter-spacing="3" opacity=".7">GOLFO</text>
-    <text x="915" y="680" class="map-sub" font-size="15" letter-spacing="3" opacity=".7" transform="rotate(90 915 680)">OCEANO ATLANTICO</text>
-    <g transform="translate(905 1210)" opacity=".75">
+    <text x="${r(260)}" y="${r(1660)}" class="map-sub" font-size="15" letter-spacing="3" opacity=".7">GOLFO DI LEONIDA</text>
+    <text x="${r(1780)}" y="${r(760)}" text-anchor="end" class="map-sub" font-size="15" letter-spacing="3" opacity=".7">OCEANO ATLANTICO</text>
+    <g transform="translate(${r(330)} ${r(1820)})" opacity=".75">
       <circle r="28" fill="none" stroke="#f6ede4" stroke-opacity=".4"/>
       <path d="M0 -24 L7 0 L0 24 L-7 0 Z" fill="#f6ede4" fill-opacity=".25"/><path d="M0 -24 L7 0 L-7 0 Z" fill="#ff4f8b"/>
       <text y="-34" text-anchor="middle" class="map-sub" font-size="13">N</text>
     </g>`;
-  const sublabels = [["Key Lento",600,1140],["Abismo Key",540,1228],["Riquezas Keys",410,1240],["Permit Keys",770,1068],["Hamlet",585,780],["Cottonmouth Lake",548,905],["Vice Beach",900,812],["Starfish Is.",850,862],["Featherstone Is.",315,680],["Pelican Valley",450,845],["Bobcat Bight",740,315],["Manifest Canyon",470,280]];
+  const sublabels = [["Key Lento",1090,2160],["Abismo Key",820,2335],["Riquezas Keys",400,2060],["Permit Keys",705,2130],["Mile Zero",510,2210],["Hamlet",1060,1760],["Cottonmouth Lake",955,2010],["Vice Beach",1590,1260],["Starfish Is.",1478,1360],["Featherstone Is.",710,385],["Pelican Valley",985,1880],["Bobcat Bight",525,1515],["Manifest Canyon",735,780],["Belville",1240,1020],["Lake Leonida",1110,825],["VCIA",1040,1540],["Capri",515,1350],["Draper Is.",470,720],["Watson Bay",770,1810],["Millport",1290,640],["Bonanza",920,380],["Grayson",760,600],["Waning Sands",1380,880],["Little Cuba",1250,1385],["Kelly County",820,1010],["Leonard County",1250,910],["Mariana County",640,1880]];
   $("#mapLabels").innerHTML =
-    REGIONS.map(r=>`<text x="${r.x}" y="${r.y}" text-anchor="middle" class="map-lbl" style="font-size:calc(${r.id==='kalaga'?22:24}px * var(--lk,1))">${esc(r.short)}</text>`).join("") +
-    sublabels.map(([t,x,y])=>`<text x="${x}" y="${y}" text-anchor="middle" class="map-sub" style="font-size:calc(12px * var(--lk,1))">${esc(t)}</text>`).join("");
+    REGIONS.map(g=>`<text x="${g.x}" y="${g.y}" text-anchor="middle" class="map-lbl" style="font-size:calc(${g.id==='kalaga'?20:22}px * var(--lk,1))">${esc(g.short)}</text>`).join("") +
+    sublabels.map(([t,x,y])=>`<text x="${r(x)}" y="${r(y)}" text-anchor="middle" class="map-sub" style="font-size:calc(12px * var(--lk,1))">${esc(t)}</text>`).join("");
 }
 
 function allPlaces(){
-  const fr = custom() ? "c" : "s";
+  const fr = custom() && !isOfficial() ? "c" : "s";
   const base = PLACES.map(p=>{
     if(!custom()) return p;
     const cp = S.cpos[p.id];
-    return cp ? Object.assign({}, p, {x:cp.x, y:cp.y}) : Object.assign({}, p, {y:Math.round(p.y*VBH/1300), unplaced:true});
+    if(cp) return Object.assign({}, p, {x:cp.x, y:cp.y});
+    if(isOfficial()) return p;
+    return Object.assign({}, p, {y:Math.round(p.y*VBH/BASE_H), unplaced:true});
   });
   return base.concat(S.pins.filter(p=>(p.frame||"s")===fr).map(p=>Object.assign({cat:"mio", v:"mine"}, p)));
 }
@@ -1103,7 +1146,7 @@ function setHint(){
       <span style="font-weight:500">${esc(p.where||"")}</span>
       <span class="gbtns">${placing.single?"":'<button class="btn" data-g="skip">Salta</button>'}<button class="btn" data-g="end">${placing.single?"Annulla":"Fine"}</button></span>`;
   } else if(addMode){ h.classList.add("on"); h.textContent="Tocca la mappa dove vuoi il segnaposto"; }
-  else h.textContent = custom() ? "La tua mappa · tocca un segnaposto per i dettagli" : "Posizioni indicative · mappa schematica";
+  else h.textContent = custom() ? "La tua mappa · tocca un segnaposto per i dettagli" : "Mappa schematica · carica la tua per i dettagli";
   svg.classList.toggle("adding", !!(addMode||placing));
 }
 $("#mapHint").addEventListener("click", e=>{
@@ -1135,9 +1178,10 @@ function renderMapCtl(){
       <span class="lead">Carica uno screenshot della mappa di gioco o la mappa ufficiale: l'immagine resta solo su questo dispositivo e i segnaposti si mettono sopra.</span>`;
     return;
   }
-  const todo = PLACES.filter(p=>!S.cpos[p.id]).length;
+  const todo = isOfficial() ? 0 : PLACES.filter(p=>!S.cpos[p.id]).length;
   el.innerHTML = `<span class="seg" role="group" aria-label="Tipo di mappa"><button data-mm="mine" aria-pressed="${!!S.useCustom}">La mia mappa</button><button data-mm="schema" aria-pressed="${!S.useCustom}">Schematica</button></span>
-    ${S.useCustom?`<button class="btn small${todo?" primary":""}" data-mm="guide">${todo?`Posiziona i segnaposti (${todo})`:"Riposiziona i segnaposti"}</button>`:""}
+    ${S.useCustom && isOfficial()?'<span class="pill ok">mappa ufficiale riconosciuta</span>':""}
+    ${S.useCustom && !isOfficial()?`<button class="btn small${todo?" primary":""}" data-mm="guide">${todo?`Posiziona i segnaposti (${todo})`:"Riposiziona i segnaposti"}</button>`:""}
     <button class="btn small" data-mm="load">Sostituisci immagine</button>
     <button class="btn small" data-mm="del">Rimuovi</button>`;
 }
@@ -1200,7 +1244,8 @@ $("#mapFile").addEventListener("change", async e=>{
     let stored=true; try{ await idb("put","map",blob); }catch(err){ stored=false; }
     S.useCustom=true; save(); drawBase(); fitMap(); renderMarkers(); setHint();
     toast(stored ? "Mappa caricata" : "Mappa caricata solo per questa sessione");
-    if(PLACES.some(p=>!S.cpos[p.id])) setTimeout(()=>openSheet(`<span class="eyebrow">La mia mappa</span><h3 id="sheetTitle">Sistema i segnaposti</h3>
+    if(isOfficial()) toast("Mappa ufficiale riconosciuta: segnaposti già al loro posto");
+    else if(PLACES.some(p=>!S.cpos[p.id])) setTimeout(()=>openSheet(`<span class="eyebrow">La mia mappa</span><h3 id="sheetTitle">Sistema i segnaposti</h3>
       <p>Le posizioni dei luoghi della guida sono stimate e non coincidono con la tua immagine. Con la sistemazione guidata ti propongo un luogo alla volta: fai zoom, trova il punto e toccalo. Puoi saltare quelli che non conosci e riprendere quando vuoi.</p>
       <div class="acts"><button class="btn primary" data-close data-startguide>Inizia ora</button><button class="btn" data-close>Più tardi</button></div>`), 300);
   }catch(err){ toast("Non riesco ad aprire questa immagine. Prova con un JPG o PNG."); }
@@ -1277,7 +1322,7 @@ function openPinForm(x,y){
   $("#pinForm").addEventListener("submit", ev=>{
     ev.preventDefault();
     const name = $("#pinName").value.trim(); if(!name) return;
-    S.pins.push({id:"p-"+Date.now(), name, desc:$("#pinNote").value.trim(), where:"Il tuo segnaposto", x, y, frame: custom()?"c":"s"});
+    S.pins.push({id:"p-"+Date.now(), name, desc:$("#pinNote").value.trim(), where:"Il tuo segnaposto", x, y, frame: custom() && !isOfficial() ?"c":"s"});
     S.filters.mio = true; save(); renderFilters();
     closeSheet(); renderMarkers(); toast("Segnaposto salvato");
     if(addMode) $("#addPin").click();
